@@ -1,3 +1,11 @@
+---
+# sitemap: false keeps this commercial-licensing outreach page out of the
+# jekyll-sitemap-generated /sitemap.xml (and thus out of search results). The
+# page stays live and directly reachable — it's just not advertised to crawlers.
+# Front matter is otherwise empty so the site-wide `default` layout still applies.
+sitemap: false
+---
+
 # Commercial Licensing
 
 Fashionably Late is licensed under the Apache License, Version 2.0
