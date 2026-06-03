@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://fashionablylate.app/sitemap.xml
