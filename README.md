@@ -2,25 +2,26 @@
 
 > **Schedule emails at their perfect time.**
 
-Smarter Gmail scheduling: send at the right local time for your recipients, never outside your own working hours.
+Your emails arrive when your recipients are actually reading — scheduled in Gmail at the right local time for them, never outside your own working hours.
 
-Fashionably Late **enhances** Gmail's own **Schedule Send** rather than replacing it — native feel, not a branded rebuild. The "Schedule send" option becomes "Schedule Send (powered by Fashionably Late)", the modal gains a few timezone-aware options, and Gmail's familiar interactions and native **Scheduled** label are preserved. It helps your emails land at the right moment, in your recipients' time, not yours.
+Fashionably late works for parties. It works for email, too. If you work across timezones and keep doing the mental math on when to hit send, this free Chrome extension helps you schedule emails in Gmail at the right local time for your recipient, automatically. It **enhances** Gmail's own **Schedule Send** rather than replacing it — native feel, not a branded rebuild: the "Schedule send" option becomes "Schedule send (powered by Fashionably Late)", the familiar modal gains a few timezone-aware options, and Gmail's own interactions and native **Scheduled** label are preserved. Privacy-first by design.
 
 ## What it does
 
-- **Right local time, per recipient.** When you schedule an email, Fashionably Late reads the recipients from your compose window and offers to deliver at a research-backed morning or midday slot in *their* local timezone — so your message arrives during their working day, gets seen, and gets answered instead of buried. Pick a recipient's timezone once and it's remembered, so you never re-pick the timezone for the same person.
-- **A friendly timezone picker.** A searchable, plain-language timezone selector (search by city, country, abbreviation, or UTC offset) with a **Pinned** section for the zones you work across most often.
-- **A working-hours guard that stays out of your way.** We'll double-check before sending outside the hours you set. The gentle warning fires **only** on a regular Send that would go out past your working hours — with three clear choices: proceed anyway, snap to your working hours, or cancel. **Scheduling for later is always fine** and never warns — deliberately timing a message for a recipient's window is exactly what the product is for. Avoiding stray after-hours emails protects your professional brand; you stay in control either way.
+- **The right local time for your recipient.** No more working out what 2 p.m. your time means for someone three zones away. When you schedule an email, Fashionably Late reads the recipients from your compose window, lets you pick the one you're writing to, and offers a research-backed morning or midday slot in *their* local timezone — so your message arrives during their working day instead of getting buried overnight. **Pick someone's timezone once and it's remembered**, so you never re-pick it for the same person.
+- **A friendly timezone picker.** A searchable, plain-language timezone selector — find a zone by city, country, abbreviation, or UTC offset — with a **Pinned** section so the handful of zones you work across most often sit right at the top, a single tap away.
+- **A working-hours guard that stays out of your way.** Fashionably Late double-checks before a regular Send goes out past the working hours you set — with three clear choices: send anyway, snap to your working hours, or cancel. **Scheduling a message for later is always fine and never warns** — deliberately timing an email for a recipient's window is exactly what the product is for. You stay in control either way.
 - **A full settings panel.** Manage your own timezone, pinned timezones, working hours, the locally-cached recipient timezones, and feature toggles — all editable after onboarding.
+- **Accessible by design.** Built to WCAG AA standards, with full keyboard support.
 
 ## Privacy & data
 
-Fashionably Late is **local-first and privacy-first by design.** Everything runs in your browser; nothing leaves your device.
+Fashionably Late is **local by default, private by design.** It runs entirely in your browser, and nothing about your email ever leaves your device. There's no account to create and no inbox to connect.
 
-- **Everything is stored locally** in the browser (`chrome.storage.local`). There is no Fashionably Late server, no account, and no backend.
-- **No OAuth, no Google API calls.** Recipients are read directly from the compose window; recipient timezones come from a local cache or are entered by you. The only permissions it requests are local storage and access to `mail.google.com` (so it can work inside Gmail).
-- **No tracking, no telemetry, no analytics.** Fashionably Late never tracks opens, never builds engagement profiles, and never collects usage data.
-- **Email content is never read, stored, or transmitted** beyond what's strictly required to inject the scheduling UI into the compose window.
+- **Stored entirely on your device** in the browser (`chrome.storage.local`). There is no Fashionably Late server, account, or backend.
+- **No Google sign-in and no Gmail API.** It reads only the recipients in your compose window to suggest good send times — never your message content. Recipient timezones come from a local cache or are entered by you. The only permissions it requests are local storage and access to `mail.google.com` (so it can work inside Gmail).
+- **No tracking, no telemetry, no analytics.** It never tracks opens or builds engagement profiles, and collects no usage data.
+- **You stay in control of your data.** Edit, export, or delete everything from Settings at any time.
 
 > **A note on the name.** This project was developed under the working name **"OutboxIQ"** before being renamed **"Fashionably Late"** ahead of launch. If you come across "OutboxIQ" in commit history, older notes, or some internal identifiers, it's the same product.
 
@@ -32,7 +33,7 @@ Fashionably Late (Free) will be listed on the Chrome Web Store very soon.
 
 - [`extension/`](./extension) — the Chrome extension (Manifest V3). The whole product, running entirely in your browser.
 - [`Fashionably_Late_PRD.md`](./Fashionably_Late_PRD.md) — the full product requirements document and source of truth.
-- [`notes/`](./notes) — design history and owner decisions log. 
+- [`notes/`](./notes) — design history and owner decisions log.
 
 This repository is the **Free version** of Fashionably Late — the canonical, open-source, public codebase. A paid Premium tier (with a server-side component) is **out of scope of this project**; if it is ever built, it will be a separate, private project with its own Chrome Web Store listing, not part of this repo.
 
