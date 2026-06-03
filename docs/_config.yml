@@ -7,6 +7,13 @@ url: https://fashionablylate.app
 # _layouts/default.html override (logo header) resolves deterministically.
 theme: jekyll-theme-primer
 
+# Auto-generate /sitemap.xml from every page (index + legal/*) so search
+# engines can discover the whole site from one file. jekyll-sitemap is on
+# GitHub Pages' whitelisted-plugin list, so no Gemfile/build change is needed.
+# robots.txt (static, served as-is) points crawlers at the generated sitemap.
+plugins:
+  - jekyll-sitemap
+
 # All pages (index + legal/*) have no `layout:` in front matter — apply the
 # overridden default layout to every page so the logo header + favicon show.
 defaults:
@@ -14,3 +21,12 @@ defaults:
       path: ""
     values:
       layout: default
+  # The catch-all above would otherwise wrap jekyll-sitemap's generated
+  # sitemap.xml in the HTML `default` layout and corrupt the XML. This more
+  # specific scope wins (longer path match) and keeps the sitemap layout-free.
+  # (robots.txt needs no override — static files with no front matter are
+  # copied verbatim and never get a layout.)
+  - scope:
+      path: sitemap.xml
+    values:
+      layout: null
