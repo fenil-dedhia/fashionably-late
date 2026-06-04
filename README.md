@@ -27,7 +27,7 @@ Fashionably Late is **local by default, private by design.** It runs entirely in
 
 ## Status
 
-Fashionably Late (Free) will be listed on the Chrome Web Store very soon.
+Fashionably Late (Free) is **live on the Chrome Web Store** — [install it here](https://chrome.google.com/webstore/detail/jlbgbihbkikcbcndpkccijbmmlhljcol).
 
 ## Repository layout
 
