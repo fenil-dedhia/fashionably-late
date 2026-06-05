@@ -53,16 +53,15 @@ const GECKO = {
   // Firefox listing, analogous to the frozen Chrome manifest `key` (Entry 30):
   // once the AMO listing exists, changing it orphans the listing + every user's
   // stored add-on identity. Email-like format per MDN
-  // (^[A-Za-z0-9-._]*@[A-Za-z0-9-._]+$). CONFIRM before first AMO upload.
+  // (^[A-Za-z0-9-._]*@[A-Za-z0-9-._]+$). CONFIRMED by owner 2026-06-04 (S21).
   id: "fashionably-late@fashionablylate.app",
   // Floor derived from the APIs/keys actually shipped (not guessed):
   //   promise-style chrome.* .............. Firefox 121
   //   event-page background.scripts (MV3) . Firefox 121
   //   options_page manifest key ........... Firefox 126
   //   data_collection_permissions key ..... Firefox 140   ← binding constraint
-  // 140 is also the exact version the spike was hands-on verified on. Relax to
-  // "126.0" ONLY to support Firefox 126–139 (those builds then lack the AMO
-  // data-consent UI; "none" makes that immaterial, but web-ext lint will warn).
+  // 140 is also the exact version the spike was hands-on verified on. CONFIRMED
+  // by owner 2026-06-04 (S21) over the 126.0 broaden-compat alternative.
   strictMinVersion: "140.0",
   // Honest declaration: Fashionably Late collects NO data (matches PRD §11 +
   // the privacy posture). Mandatory for new AMO submissions since 2025-11-03.

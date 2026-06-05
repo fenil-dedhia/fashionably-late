@@ -82,15 +82,14 @@ both ignore lists).
 
 Commit: `83bcad2`.
 
-## §e — Awaiting owner confirmation (before first AMO upload)
+## §e — Owner confirmations — DONE (surfaced, not silently baked)
 
-Surfaced, not silently baked (tracked in PRE_LAUNCH_CHECKLIST.md → Firefox/AMO):
-- **`gecko.id` = `fashionably-late@fashionablylate.app`** — a NEW permanent AMO
-  identifier (analogous to the frozen Chrome `key`, Entry 30). Used in the spike;
-  needs explicit sign-off.
-- **`strict_min_version` = `140.0`** — derived from shipped keys (binding:
-  `data_collection_permissions` needs FF 140; also the spike-verified version).
-  Relax to `126.0` only to cover FF 126–139.
+Both confirmed by the owner this session (the proposed values stood, so no code
+change):
+- ✅ **`gecko.id` = `fashionably-late@fashionablylate.app`** — now a permanent AMO
+  identifier (analogous to the frozen Chrome `key`, Entry 30).
+- ✅ **`strict_min_version` = `140.0`** — confirmed over the `126.0` broaden-compat
+  alternative.
 
 ## §f — AMO submission punch list (tracked, NOT folded in)
 

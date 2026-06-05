@@ -170,17 +170,16 @@ hard-blocking to polish.
   recipient read, on-install injection, multi-compose handoff, §5.5.1 warning all
   verified. (`research/firefox-spike.md`.)
 
-### Owner confirmations needed before first AMO upload
+### Owner confirmations — DONE (2026-06-04, Session 21)
 
-- **`gecko.id` = `fashionably-late@fashionablylate.app`** (set in
-  `build-firefox.mjs`). This becomes a **permanent** AMO identifier — analogous to
-  the frozen Chrome `key` (Entry 30). Confirm the value before the first upload;
-  changing it after the listing exists orphans the listing. *(Status: proposed,
-  used in the spike build — awaiting explicit owner sign-off.)*
-- **`strict_min_version` = `140.0`.** Derived from shipped keys/APIs (binding
-  constraint: `data_collection_permissions` needs Firefox 140; also the version
-  the spike was verified on). Relax to `126.0` only if Firefox 126–139 support is
-  wanted. *(Status: proposed — awaiting sign-off.)*
+- ✅ **`gecko.id` = `fashionably-late@fashionablylate.app`** (set in
+  `build-firefox.mjs`). **Owner-confirmed.** Now a **permanent** AMO identifier —
+  analogous to the frozen Chrome `key` (Entry 30): once the AMO listing exists, do
+  not change it (changing it orphans the listing).
+- ✅ **`strict_min_version` = `140.0`.** **Owner-confirmed** over the `126.0`
+  broaden-compat alternative. Derived from shipped keys/APIs (binding constraint:
+  `data_collection_permissions` needs Firefox 140; also the spike-verified
+  version).
 
 ### AMO submission punch list (track explicitly; do NOT silently fold in)
 
