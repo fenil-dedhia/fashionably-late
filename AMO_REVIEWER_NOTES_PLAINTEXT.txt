@@ -1,0 +1,30 @@
+Fashionably Late - notes for the reviewer
+
+Source (Apache-2.0): https://github.com/fenil-dedhia/fashionably-late
+The uploaded package is built from the extension/ directory.
+
+WHAT IT DOES
+Enhances Gmail's native "Schedule send": relabels the menu item and adds a dialog that suggests send times in the recipient's local time zone. Runs entirely on-device.
+
+PERMISSIONS
+- storage: saves the user's own settings (time zone, working hours, pinned zones, a local recipient-timezone cache) in chrome.storage.local. Never leaves the device.
+- scripting: lets the background event page inject the bundled content script into a Gmail tab already open at install/update time (static content_scripts only fire on later page loads). No remote code is ever injected.
+- host https://mail.google.com/* (only): the content script runs inside Gmail to enhance the compose / Schedule-Send UI.
+
+DATA COLLECTION: NONE (manifest data_collection_permissions = {"required":["none"]})
+- No network: no fetch/XHR, no backend, no analytics, no telemetry, no third-party scripts.
+- No Google sign-in, no Gmail API, no OAuth. Recipient time zones come from a local cache or are typed by the user. Recipient names are read from the chips Gmail already rendered (To/CC only; BCC excluded). Message content is never read, stored, or transmitted.
+
+REPRODUCING THE BUILD (built with Node 24.15.0 / npm 11.12.1; use Node 24.x)
+  git clone https://github.com/fenil-dedhia/fashionably-late
+  cd fashionably-late/extension
+  npm ci
+  npm run package:firefox
+  => release/fashionably-late-1.0.0-firefox.zip  (the uploaded file)
+Two clean builds produce a byte-identical tree (content-hashed chunk names are stable). The Firefox manifest differs from the Chrome build only by: removing the Chrome "key"; background.service_worker -> background.scripts (event page); adding browser_specific_settings.gecko; removing the Chrome-only use_dynamic_url. The build script asserts every other manifest field matches the Chrome build.
+
+ABOUT THE VALIDATION WARNINGS
+- "Unsafe assignment to innerHTML" (x2) in assets/TimezonePicker-*.js: these are INTERNAL TO THE BUNDLED REACT DOM LIBRARY, not extension code - React's <script>-creation helper and its dangerouslySetInnerHTML code path. The extension's own source contains no innerHTML / dangerouslySetInnerHTML (grep -rn "innerHTML" extension/src returns only document.body.innerHTML="" inside non-shipped test files). The chunk is named "TimezonePicker" only because that React component is its bundle entry point.
+- Android min-version warning: this is a desktop Gmail product; Firefox for Android is not a target.
+
+Contact: fenil.h.dedhia@gmail.com
