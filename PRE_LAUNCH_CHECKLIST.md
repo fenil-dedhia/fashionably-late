@@ -147,6 +147,69 @@ hard-blocking to polish.
 
 ---
 
+## Firefox / addons.mozilla.org (AMO) — IN SCOPE (Session 21, Entry 62)
+
+> Firefox was lifted off the §11.19 ban after the spike cleared (PRD §6.4 +
+> §11.19 amendments; owner-decisions-log Entry 62; `research/firefox-spike.md`).
+> The port is **single source tree, one build target** — `npm run build:firefox`
+> (→ `dist-firefox/`) and `npm run package:firefox` (→
+> `release/fashionably-late-<version>-firefox.zip`), both via
+> `extension/scripts/build-firefox.mjs`, which transforms the Chrome `dist/`
+> manifest with exactly four deltas and asserts every shared field matches Chrome
+> (anti-drift). **`gmail-recipe.ts` and all hot paths are NOT forked** — a Firefox
+> conditional anywhere in them is a gating decision, not an inline change (Entry 23).
+
+### Build / verification status — DONE (Session 21)
+
+- ✅ `build:firefox` / `package:firefox` targets added; anti-drift + §11-surface
+  checks pass; `web-ext lint --self-hosted` → **0 errors**.
+- ✅ Chrome regression gate green after adding the target: build, **376 tests**,
+  `npm run package` all pass; Chrome `dist/` untouched (keeps `key` +
+  `service_worker`).
+- ✅ Spike + Step-2/Step-4 hands-on (owner, Firefox): scheduled-send drive,
+  recipient read, on-install injection, multi-compose handoff, §5.5.1 warning all
+  verified. (`research/firefox-spike.md`.)
+
+### Owner confirmations needed before first AMO upload
+
+- **`gecko.id` = `fashionably-late@fashionablylate.app`** (set in
+  `build-firefox.mjs`). This becomes a **permanent** AMO identifier — analogous to
+  the frozen Chrome `key` (Entry 30). Confirm the value before the first upload;
+  changing it after the listing exists orphans the listing. *(Status: proposed,
+  used in the spike build — awaiting explicit owner sign-off.)*
+- **`strict_min_version` = `140.0`.** Derived from shipped keys/APIs (binding
+  constraint: `data_collection_permissions` needs Firefox 140; also the version
+  the spike was verified on). Relax to `126.0` only if Firefox 126–139 support is
+  wanted. *(Status: proposed — awaiting sign-off.)*
+
+### AMO submission punch list (track explicitly; do NOT silently fold in)
+
+- **2× `innerHTML` lint warnings (`UNSAFE_VAR_ASSIGNMENT`) in `TimezonePicker`.**
+  AMO does human source review and may flag direct HTML writes. Almost certainly
+  benign — the picker renders our own fixed curated-timezone dataset, no
+  outside-controlled input — but a reviewer flag means a review round-trip and a
+  delayed listing, so clean it **before** submission. **`TimezonePicker` is the
+  SHARED component** used by onboarding §5.1.3 and Optimize-for-X §5.3.5 (Entry
+  40), so any refactor ships to **Chrome too** and needs a Chrome regression
+  check. **Isolate it as its own change; do NOT fold it into the Firefox-build
+  commit.**
+- **AMO reproducible-build requirement.** Firefox requires source + exact build
+  steps so a reviewer can rebuild and byte-match the uploaded package. Apache-2.0
+  makes handing over source a non-issue; the work is (a) making the build
+  deterministic (pinned deps — note the CRXJS/Vite 8/Rolldown toolchain and its
+  hashed chunk names), and (b) writing clear reviewer build instructions. Scope it
+  now so it doesn't surprise us at submission.
+- **`KEY_FIREFOX_ANDROID_UNSUPPORTED_BY_MIN_VERSION` (Android-only lint warning).**
+  Accepted: this is a desktop Gmail product; Firefox for Android is not a target.
+  No action unless Android support is ever added.
+- **AMO listing mechanics** (parallel to the Chrome list above): developer account
+  on a stable Google/Mozilla account; listing copy + screenshots (can reuse the
+  Chrome assets); single-purpose description; support email; privacy-policy URL
+  (`https://fashionablylate.app/legal/privacy`); the no-data-collection disclosure
+  matches the `data_collection_permissions: {required:["none"]}` manifest key.
+
+---
+
 ## Infrastructure — out of scope of this project
 
 > **Out of scope of this project (2026-05-27, owner-directed — Entry 52;

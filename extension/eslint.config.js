@@ -12,7 +12,7 @@ import globals from "globals";
 // not a hand-tuned opinion config. typescript-eslint integrates the TS rules;
 // eslint-config-prettier (last) disables stylistic rules that Prettier owns.
 export default tseslint.config(
-  { ignores: ["dist", "node_modules", "public/icons"] },
+  { ignores: ["dist", "dist-firefox", "node_modules", "public/icons"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
