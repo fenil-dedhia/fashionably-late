@@ -127,17 +127,32 @@ After the build target, the owner said "yes to all" on the remaining prep:
   resolved as a reviewer note. *(Corrects the earlier "clean it before submission"
   framing — Entry-17 honesty.)*
 - **Reproducible build verified deterministic** — two clean builds → byte-identical
-  tree. Reviewer build steps + toolchain written in **`AMO_REVIEWER_NOTES.md`**
-  (also: the 4 deltas, permission justifications, no-network/no-OAuth facts —
-  grep-verified).
-- **Listing copy drafted** — **`AMO_LISTING_COPY.md`** (name/summary/description/
-  metadata, reusing landing-page messaging; screenshots reuse Chrome assets).
+  tree. Plain-text reviewer notes (build steps + toolchain, the 4 deltas,
+  permission justifications, no-network/no-OAuth facts — grep-verified) kept at
+  **`notes/AMO_REVIEWER_NOTES_PLAINTEXT.txt`** (paste-ready for AMO's 3000-char
+  Notes-for-Reviewer field). *(The longer `AMO_REVIEWER_NOTES.md` +
+  `AMO_LISTING_COPY.md` drafts were removed after submission — owner cleanup; the
+  plain-text notes are the surviving copy.)*
+- **Source submission** — AMO flagged the bundled build (Vite/CRXJS), so source +
+  build steps were required. A `git archive` source zip
+  (`extension/release/fashionably-late-1.0.0-source.zip`, gitignored) was generated
+  and **verified buildable** in a clean temp dir (`npm ci` + `npm run
+  package:firefox` reproduced the Firefox zip).
 
-**Owner-only remainder:** create the Mozilla/AMO developer account, upload the
-Firefox zip, paste the copy + reviewer notes, set category + the no-data
-disclosure, submit. The build, reviewer notes, and listing copy are all ready.
+**Owner-only remainder:** finish the AMO listing fields, set category + the
+no-data disclosure, submit. The Firefox package, the verified-buildable source
+zip, and the plain-text reviewer notes are all ready/uploaded.
 
 ## §j — What's left for the Firefox port
 
-Only the owner-only AMO submission steps above. The build target, reproducible
-build, reviewer notes, and listing copy are **done and verified**.
+Only the owner-only AMO listing/submission steps above. The build target,
+deterministic build, reviewer notes, and source submission are **done and
+verified**.
+
+## §k — Owner doc cleanup (S21 follow-up)
+
+Per owner: removed the `AMO_REVIEWER_NOTES.md` + `AMO_LISTING_COPY.md` drafts
+(the plain-text reviewer notes survive at `notes/AMO_REVIEWER_NOTES_PLAINTEXT.txt`);
+**`PRE_LAUNCH_CHECKLIST.md` untracked** (`git rm --cached` + added to root
+`.gitignore`) — kept locally as owner working context, like `CLAUDE.md`, no longer
+in the public repo.

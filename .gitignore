@@ -61,3 +61,6 @@ Thumbs.db
 # at the Session-17 close-out). Future local sessions keep reading + evolving
 # it; the last tracked version is frozen at Session-17 close.
 CLAUDE.md
+
+# Owner working docs kept local-only (untracked at S21)
+PRE_LAUNCH_CHECKLIST.md
