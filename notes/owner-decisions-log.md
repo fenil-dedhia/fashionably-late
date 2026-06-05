@@ -2902,6 +2902,80 @@ this one.
 
 ---
 
+## Entry 62 — Firefox/AMO port greenlit: the PRD's "permanent" Firefox ban (§11.19 + §6.4) explicitly lifted after a hands-on spike showed the API gap is small and known
+
+- **Session:** 21 (2026-06-04).
+- **Moment:** A deliberate owner reversal of a lock the PRD framed as permanent.
+  PRD §11 ("Out of Scope: Do Not Build") item 19 forbade "Firefox, Safari, or
+  non-Chromium browser support," and §6.4 excluded Firefox outright. The owner
+  greenlit a **Firefox / addons.mozilla.org (AMO) port** of Free v1 after a
+  spike cleared. This is the rare case of moving *off* a §11 lock — done with the
+  Entry-4 discipline (original lines preserved; amendment notes appended, not
+  deletions).
+- **What is reversed, precisely:** only the **Firefox** portion. §11.19's
+  **Safari and other non-Chromium** browsers remain forbidden; §6.4 still names
+  Chrome primary, Edge/Brave secondary, Safari out. The amendment is scoped to
+  one browser, not a blanket "support everything."
+- **Why it's justified now (the original reason substantially evaporated).** §6.4
+  gave exactly one reason for excluding Firefox: *"different extension APIs."*
+  The spike measured that gap directly and found it **small and fully
+  enumerated** — the entire divergence is **four manifest deltas** (drop the
+  Chrome `key`; `background.service_worker` → event-page `background.scripts`;
+  add `browser_specific_settings.gecko`; strip the Chrome-only `use_dynamic_url`)
+  while the **app source ran unchanged** (modal, content scripts, storage,
+  working-hours logic; `chrome.*` is Firefox-aliased, promise-style
+  `chrome.storage` works on Firefox ≥121). When the sole stated justification for
+  a lock is shown to be largely false, keeping the lock is dogma, not judgment.
+- **Honest scope of the proof (Entry-17 programmatic-vs-hands-on standard).** What
+  was actually verified: **one** Firefox build (a transformed copy of the live
+  Chrome `dist/`, not a from-scratch build), loaded as a temporary add-on, on
+  **the owner's machine**, in **the owner's own Gmail account**, at **this Gmail
+  DOM revision**, on a recent desktop Firefox. The core mechanism —
+  `gmail-recipe.ts`'s synthetic-event Schedule Send drive — produced a **real
+  native scheduled send end-to-end**. What was NOT yet proven at greenlight and is
+  explicitly gating packaging: (a) the **other** Gmail-DOM single point of failure,
+  `compose-recipients.ts` recipient read, confirmed *correct* in Firefox (the code
+  path executes at every modal open, but a populated-dropdown observation was not
+  captured); (b) the on-install `chrome.scripting` injection under Firefox's
+  event-page lifecycle. No multi-account, multi-OS, CI, or cross-Gmail-revision
+  evidence exists. The greenlight rests on a single hands-on data point — strong
+  for "viable," not a guarantee of "robust."
+- **Architecture decision carried by this entry: one source tree + a Firefox
+  build target.** The Firefox manifest is generated from the **same typed
+  `manifest.config.ts`** as Chrome, applying only the four deltas, so shared
+  fields (permissions, host, name, version) **cannot drift** between the two
+  manifests. **Rejected counterfactual:** the owner first proposed a sibling
+  `firefox_extension/` folder duplicating the `extension/` tree. Considered and
+  **rejected** — duplication would fork the project's two deliberately-isolated
+  single points of failure (`gmail-recipe.ts`, `compose-recipients.ts`), so every
+  future Gmail breakage would need fixing twice and the copies would silently
+  drift. The spike's central finding — *the source did not fork, only the manifest
+  and packaging did* — is precisely what makes single-source the correct shape and
+  the duplicate-tree instinct (understandable as "don't risk Chrome") the wrong
+  tool. Chrome is protected instead by: single-source + a hard rule that no hot
+  path (`gmail-recipe.ts`, §5.2 interceptor, §5.5.1 guard, page-ownership) gets a
+  Firefox conditional without a separate gating decision (Entry 23 discipline), +
+  a Chrome regression gate (build/tests/package + Flows A–G if any shared source
+  changes).
+- **§11 invariants untouched.** The port introduces no tracking, no analytics, no
+  backend, no network — the Firefox build is the same local-only extension. The
+  AMO `data_collection_permissions` declaration states **no data collected**,
+  which is the honest declaration and matches the privacy posture.
+- **What Claude Code would have done without this input:** kept Firefox firmly out
+  of scope. The lock was explicit and worded as permanent; absent an owner
+  greenlight, the correct default was to *flag* viability (which the spike did) and
+  stop — not to self-authorize a scope expansion off a §11 item.
+- **Honest counterfactual cost:** real and ongoing, accepted knowingly. A second
+  store surface to maintain (AMO listing, its review round-trips, a reproducible
+  build, the `innerHTML` lint cleanup), and the standing risk that a future Gmail
+  change breaks Firefox and Chrome differently. Weighed against reach to Firefox
+  users at low *incremental* code cost (source shared), the owner judged it worth
+  it. The downside is bounded by the no-hot-path-fork rule: if Firefox ever needs a
+  recipe conditional, that surfaces as its own decision rather than quietly
+  entangling the Chrome path.
+
+---
+
 *New entries are appended at every session close-out, alongside the session
 summary. If a session produced no trajectory-changing owner input, record that
 explicitly (`Session N — no entries this session.`) rather than leaving a gap

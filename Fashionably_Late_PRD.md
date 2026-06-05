@@ -1046,6 +1046,20 @@ Clicking "Undo" within the 7-second window cancels the scheduled email and reope
 - Firefox is not supported in v1 due to different extension APIs.
 - Safari is not supported in v1.
 
+> **Amendment (2026-06-04, owner greenlight — Session 21; see owner-decisions-log
+> Entry 62).** The Firefox exclusion above is **lifted**. Its sole stated reason —
+> "different extension APIs" — was measured directly by a hands-on Firefox spike and
+> found small and fully enumerated: the entire divergence is four manifest deltas
+> (drop the Chrome `key`; `background.service_worker` → event-page
+> `background.scripts`; add `browser_specific_settings.gecko`; strip the Chrome-only
+> `use_dynamic_url`), with the app source unchanged. A Firefox/AMO port of Free v1
+> is now in scope, built from the **same single source tree** as Chrome via a
+> Firefox build target (no duplicated tree). **Scope of this amendment:** Firefox
+> only — **Safari remains unsupported** (line above stands), and §11.19's
+> non-Chromium-in-general posture is otherwise unchanged. Proof scope was one build
+> / owner account / owner machine / this Gmail revision (Entry 62 records the honest
+> limits).
+
 ### 6.5 Security
 
 - The extension must use Manifest V3.
@@ -1602,7 +1616,7 @@ The following features and behaviors must **not** be implemented in v1. This lis
 16. **Multi-account support** within a single Chrome profile. If users want to use Fashionably Late on multiple Gmail accounts, they can use separate Chrome profiles.
 17. **Holiday awareness** that detects public holidays or out-of-office events on the target send date.
 18. **Separate scheduled emails dashboard.** Use Gmail's native Scheduled label, do not build a parallel view.
-19. **Firefox, Safari, or non-Chromium browser support.**
+19. **Firefox, Safari, or non-Chromium browser support.** *(Amended 2026-06-04, Session 21 — owner-decisions-log Entry 62: the **Firefox** portion of this item is **lifted**; a Firefox/AMO port of Free v1 is now in scope, built from the same single source tree as Chrome. **Safari and other non-Chromium browsers remain out of scope.** See §6.4's amendment note.)*
 20. **Behavioral analytics, usage telemetry, or any data collection beyond what is strictly required for features the user has opted into.**
 
 ---
