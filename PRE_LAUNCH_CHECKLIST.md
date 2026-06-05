@@ -181,31 +181,39 @@ hard-blocking to polish.
   `data_collection_permissions` needs Firefox 140; also the spike-verified
   version).
 
-### AMO submission punch list (track explicitly; do NOT silently fold in)
+### AMO submission punch list
 
-- **2× `innerHTML` lint warnings (`UNSAFE_VAR_ASSIGNMENT`) in `TimezonePicker`.**
-  AMO does human source review and may flag direct HTML writes. Almost certainly
-  benign — the picker renders our own fixed curated-timezone dataset, no
-  outside-controlled input — but a reviewer flag means a review round-trip and a
-  delayed listing, so clean it **before** submission. **`TimezonePicker` is the
-  SHARED component** used by onboarding §5.1.3 and Optimize-for-X §5.3.5 (Entry
-  40), so any refactor ships to **Chrome too** and needs a Chrome regression
-  check. **Isolate it as its own change; do NOT fold it into the Firefox-build
-  commit.**
-- **AMO reproducible-build requirement.** Firefox requires source + exact build
-  steps so a reviewer can rebuild and byte-match the uploaded package. Apache-2.0
-  makes handing over source a non-issue; the work is (a) making the build
-  deterministic (pinned deps — note the CRXJS/Vite 8/Rolldown toolchain and its
-  hashed chunk names), and (b) writing clear reviewer build instructions. Scope it
-  now so it doesn't surprise us at submission.
+- ✅ **2× `innerHTML` lint warnings (`UNSAFE_VAR_ASSIGNMENT`) — RESOLVED as a
+  reviewer note, NOT a code change (S21, verified).** Investigation showed these
+  are **internal to the bundled React DOM library**, not extension-authored code
+  (React DOM's `<script>`-creation helper + its `dangerouslySetInnerHTML` path).
+  Our own source contains **no** `innerHTML`/`dangerouslySetInnerHTML`
+  (`grep -rn "innerHTML\|dangerouslySetInnerHTML" extension/src` → only
+  `document.body.innerHTML = ""` in non-shipped tests). The chunk is named after
+  `TimezonePicker` only because that React component is its bundle entry point.
+  There is therefore nothing to refactor; the resolution is the explanation in
+  `AMO_REVIEWER_NOTES.md`. *(My earlier "clean it before submission" framing
+  assumed it was our code — corrected once the bundle was inspected.)*
+- ✅ **AMO reproducible-build requirement — DONE (S21).** Build verified
+  **deterministic**: two clean builds from source + `package-lock.json` produce a
+  byte-identical output tree (content-hashed chunk names stable). Reviewer build
+  steps + toolchain (Node 24.15.0 / npm 11.12.1, `npm ci`, `npm run
+  package:firefox`) written in **`AMO_REVIEWER_NOTES.md`** (also covers the four
+  manifest deltas, permission justifications, and the no-data-collection /
+  no-network facts).
+- ✅ **Listing copy — DRAFTED (S21).** Ready-to-paste name / summary / description
+  / metadata in **`AMO_LISTING_COPY.md`** (reuses the live landing-page messaging).
+  Screenshots reuse the Chrome `media/web-store/` assets (browser-agnostic).
 - **`KEY_FIREFOX_ANDROID_UNSUPPORTED_BY_MIN_VERSION` (Android-only lint warning).**
   Accepted: this is a desktop Gmail product; Firefox for Android is not a target.
-  No action unless Android support is ever added.
-- **AMO listing mechanics** (parallel to the Chrome list above): developer account
-  on a stable Google/Mozilla account; listing copy + screenshots (can reuse the
-  Chrome assets); single-purpose description; support email; privacy-policy URL
-  (`https://fashionablylate.app/legal/privacy`); the no-data-collection disclosure
-  matches the `data_collection_permissions: {required:["none"]}` manifest key.
+  No action unless Android support is ever added. (Also noted in
+  `AMO_REVIEWER_NOTES.md`.)
+- **OWNER-ONLY remaining (cannot be automated):** create the AMO developer account
+  (Mozilla account); upload `release/fashionably-late-<version>-firefox.zip`; paste
+  the listing copy + reviewer notes; set category (Social & Communication —
+  confirm); set the no-data-collection disclosure (matches the
+  `data_collection_permissions: {required:["none"]}` manifest key); submit. Review
+  round-trip then runs on Mozilla's side.
 
 ---
 

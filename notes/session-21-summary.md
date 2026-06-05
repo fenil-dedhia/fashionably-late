@@ -115,9 +115,29 @@ change):
 
 **Entry 62** — Firefox/AMO port greenlit; §11.19 + §6.4 Firefox ban lifted.
 
-## §i — What's left for the Firefox port
+## §i — AMO submission prep — DONE (S21 follow-up)
 
-Owner-parallel + a small isolated code task: (1) confirm `gecko.id` +
-`strict_min_version`; (2) the `innerHTML` cleanup as its own Chrome-checked
-change; (3) reproducible-build + reviewer instructions; (4) AMO account + listing
-+ submission. The build target itself is **done and verified**.
+After the build target, the owner said "yes to all" on the remaining prep:
+
+- **`innerHTML` cleanup → there was nothing to clean.** Inspecting the bundle
+  proved the 2 `UNSAFE_VAR_ASSIGNMENT` warnings are **React DOM internals**
+  (`a.innerHTML="<script></script>"`; `e.innerHTML=r.__html`), not
+  extension-authored code — our source has no `innerHTML`/`dangerouslySetInnerHTML`
+  outside test cleanup. **No source change made** (so no Chrome regression risk);
+  resolved as a reviewer note. *(Corrects the earlier "clean it before submission"
+  framing — Entry-17 honesty.)*
+- **Reproducible build verified deterministic** — two clean builds → byte-identical
+  tree. Reviewer build steps + toolchain written in **`AMO_REVIEWER_NOTES.md`**
+  (also: the 4 deltas, permission justifications, no-network/no-OAuth facts —
+  grep-verified).
+- **Listing copy drafted** — **`AMO_LISTING_COPY.md`** (name/summary/description/
+  metadata, reusing landing-page messaging; screenshots reuse Chrome assets).
+
+**Owner-only remainder:** create the Mozilla/AMO developer account, upload the
+Firefox zip, paste the copy + reviewer notes, set category + the no-data
+disclosure, submit. The build, reviewer notes, and listing copy are all ready.
+
+## §j — What's left for the Firefox port
+
+Only the owner-only AMO submission steps above. The build target, reproducible
+build, reviewer notes, and listing copy are **done and verified**.
