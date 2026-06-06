@@ -75,7 +75,7 @@ recorded in `CLAUDE.md` so future sessions maintain it automatically.
   invalidates everything else — and refuse to build on top of it until it is
   proven, no matter how much "safe" adjacent work is available.
 
-## Entry 3 — Salvaging Approach C when programmatic clicks kept failing
+## Entry 3 — The selector fix that saved the project: salvaging Approach C when programmatic clicks kept failing
 
 - **Session:** 2
 - **Moment:** During the spike's Open Question 2, synthetic clicks on Gmail's
@@ -449,46 +449,7 @@ recorded in `CLAUDE.md` so future sessions maintain it automatically.
   and ownership* behind them are not — if the decision process is the thing
   worth teaching, it has to be deliberately instrumented, or it disappears.
 
-## Entry 18 — Silent bugs may never be deferred by documentation
-
-- **Session:** 5
-- **Moment:** The Session 5 smoke test (Scenario 4) confirmed a deterministic,
-  *silent* wrong-email mis-target: with two compose windows open, scheduling
-  from one scheduled the other, with no error and no signal. Claude presented
-  three options — full fix (own session), minimal safety net, or document +
-  defer as a known MVP edge — flagged the severity as sharper than Session 4's
-  "MVP edge" framing, and recommended the minimal safety net.
-- **My input:** Chose the minimal safety net, and — the load-bearing part —
-  converted Claude's *lean* into a stated, general rule: **a bug that fails
-  silently (wrong outcome, no error, no visible degradation) may not be
-  deferred via documentation even when "document + defer" is the cheapest
-  option; the cheapest acceptable response is the one that makes the failure
-  visible or safe.** Also specified the implementation contract: an
-  unconditional (not DEV-gated) diagnostic log for test-user visibility, *no*
-  user-facing message (graceful degradation, not an apology), and that
-  PRE_LAUNCH must frame the safety net as interim, not the end state.
-- **What Claude Code would have done without it:** Honest accounting: Claude
-  had *already* surfaced the upgraded severity and recommended the same option,
-  so this is not a case where owner judgment reversed a wrong default. But
-  Claude offered "document + defer" as a *legitimate* option and only "leaned"
-  against it — had the owner picked it, Claude would have executed it. The
-  owner's contribution was removing that ambiguity: turning a situational
-  preference into a transferable principle, and pinning the
-  visibility/no-message/interim-framing contract that Claude had not specified.
-- **Outcome:** Safety net shipped (`313d34d`): ≥2 compose chevrons → hand off
-  to native on the real compose-scoped menuItem so Gmail schedules the correct
-  email; unconditional `console.info`; no user-facing message. The full fix
-  (detached-popup anchor problem) is logged as launch-blocking in
-  `PRE_LAUNCH_CHECKLIST.md`, explicitly marked interim-not-end-state.
-- **Artifact:** Commits `ce5e97f`, `313d34d`; `PRE_LAUNCH_CHECKLIST.md`
-  "Multi-compose targeting — full fix"; `notes/session-5-summary.md`
-  (Scenario 4); `CLAUDE.md` "Locked product decisions".
-- **Lesson (for coaching):** "Cheapest acceptable" is not "cheapest." Triage
-  by *failure mode*, not just cost: a bug that throws or visibly degrades can
-  be documented and deferred; a bug that silently produces the wrong result
-  must first be made loud or made safe — never just written down.
-
-## Entry 19 — Locking §5.5 as a soft warning *before* the build
+## Entry 18 — Locking §5.5 as a soft warning *before* the build
 
 - **Session:** 5
 - **Moment:** Session 5 planning, before any §5.5 code. The PRD calls the
@@ -524,39 +485,7 @@ recorded in `CLAUDE.md` so future sessions maintain it automatically.
   override it explicitly and in writing up front — don't let "follow the
   spec" smuggle it in.
 
-## Entry 20 — Catching a paternalistic rule in my own approved plan
-
-- **Session:** 5
-- **Moment:** Implementing the agreed validation prerequisite. The approved
-  plan (Claude's own, owner-signed-off) said: add a "must have ≥1 working
-  day enabled" hard rule so §5.5.3's next-working-day search is well-defined.
-- **My input:** Stopped implementation and surfaced that the *approved
-  plan itself* was wrong — a ≥1-day hard-block forbids a legitimate
-  "absolute-limits-only, no soft preference" configuration and is the same
-  config-layer paternalism the soft-warning lock rejects — then chose
-  "treat zero days as no soft constraint" and had §5.5 handle it instead.
-- **What Claude Code would have done without it:** This one is honest in
-  Claude's favour and the owner's both: Claude *did* catch its own plan's
-  flaw and surface it rather than build the approved-but-wrong thing — the
-  "surface, don't act" rule (Entry 15) firing on Claude's *own* plan, not
-  just on scope creep. But the call to accept the legitimacy of an
-  absolute-only config (rather than, say, hard-blocking and adding a UI
-  hint) was the owner's. Without the owner the most likely path is Claude
-  builds the approved hard-block, because deviating from an
-  owner-approved plan needs explicit re-clearance — which is precisely
-  what surfacing obtained.
-- **Outcome:** No hard-block added; `validateWorkingHours` unchanged;
-  defense-in-depth went to `completeOnboarding` instead; §5.5 calc treats
-  zero days as soft-constraint-inactive (`eac9218`, `29610a5`). PRD §5.5.3
-  amendment documents the zero-days semantics.
-- **Artifact:** Commits `eac9218`, `29610a5`; PRD §5.5.3 amendment;
-  `notes/session-5-summary.md` "surfaced-and-corrected".
-- **Lesson (for coaching):** An approved plan is not immune from the
-  "surface, don't act" rule — if you discover *your own signed-off plan*
-  is wrong while building it, stop and re-clear, don't loyally implement
-  the mistake. Plan approval buys direction, not infallibility.
-
-## Entry 21 — Warnings fire for unintended actions, not the core use case
+## Entry 19 — Warnings fire for unintended actions, not the core use case
 
 - **Session:** 5.5
 - **Moment:** Hands-on use of the Session 5 §5.5 build. It warned on *every*
@@ -587,7 +516,7 @@ recorded in `CLAUDE.md` so future sessions maintain it automatically.
   signal. Calibrate alerts against the core use case first; "the spec said
   to warn" is not the same as "warning here helps."
 
-## Entry 22 — Refusing a network-effect design before it was ever coded
+## Entry 20 — Refusing a network-effect design before it was ever coded
 
 - **Session:** 5.5
 - **Moment:** Scoping forward features. Working-hours sharing / reply-time
@@ -615,7 +544,7 @@ recorded in `CLAUDE.md` so future sessions maintain it automatically.
   the deferral — an un-argued "later" gets relitigated; an argued one
   holds.
 
-## Entry 23 — Pulling §5.5.1 forward, then accepting the split
+## Entry 21 — Pulling §5.5.1 forward, then accepting the split
 
 - **Session:** 5.5
 - **Moment:** Deciding when to build the regular-Send (§5.5.1) trigger.
@@ -644,35 +573,7 @@ recorded in `CLAUDE.md` so future sessions maintain it automatically.
   resolution is sequencing (adjacent sessions), not cramming. Pulling work
   forward is good; pulling *risk* forward into a crowded session is not.
 
-## Entry 24 — Product changes propagate to copy
-
-- **Session:** 5.5
-- **Moment:** After the §5.5 narrowing + §5.5.1 split, the onboarding
-  working-hours helper still described the *old* behaviour ("a soft daily
-  preference") — accurate before the pivot, stale after it.
-- **My input:** Required the surrounding language move with the behaviour:
-  the helper now states that clicking Send outside working hours triggers a
-  gentle confirm. Also demanded a check of the transparency screen (the
-  outcome there: the verbatim PRD §5.1.3 bullet was *still* accurate, so it
-  was deliberately left unchanged — propagation means *re-checking* copy,
-  not reflexively rewriting it).
-- **What Claude Code would have done without it:** Shipped the behaviour
-  change with the onboarding copy untouched. Copy drift is invisible to
-  tests and to the implementer (the words still "read fine"); only a reader
-  holding the new mental model notices the mismatch. It would have sat
-  there until a confused user hit it — small, but exactly the kind of
-  detail that erodes trust by accumulation.
-- **Outcome:** Helper copy updated (`1bf9f0d`); transparency bullet
-  re-verified and intentionally kept (no PRD §5.1.3 amendment needed —
-  contrast Entry 6, where deviation *did* require amending the spec).
-- **Artifact:** Commit `1bf9f0d`; `notes/session-5.5-summary.md` (H).
-- **Lesson (for coaching):** When a feature's behaviour shifts, its
-  surrounding language is part of the change, not an afterthought — a
-  codebase whose copy describes the old behaviour ships users a wrong
-  mental model. "Propagate to copy" also means *re-confirm*, not blindly
-  rewrite: some copy survives the change correct.
-
-## Entry 25 — Assumption falsification is normal; design for robustness, don't re-guess
+## Entry 22 — Assumption falsification is normal; design for robustness, don't re-guess
 
 - **Session:** 5 (the multi-compose relabel arc)
 - **Moment:** The original A1 relabel work (`0a0a5de`) shipped on a
@@ -713,10 +614,10 @@ recorded in `CLAUDE.md` so future sessions maintain it automatically.
   under *all* plausible models; robustness-under-uncertainty beats a
   better guess, because the next guess can be wrong too.
 
-## Session 6 — note on the §5.5.1 work itself (no entry), then Entries 26–27
+## Session 6 — note on the §5.5.1 work itself (no entry), then Entries 23–24
 
 The §5.5.1 implementation that was the body of Session 6 produced **no
-owner-decisions entry**: it executed the already-locked Entry-2 / Entry-23
+owner-decisions entry**: it executed the already-locked Entry-2 / Entry-21
 probe-gating discipline (build the Send-button probe, clear the gate
 against live Gmail, then implement). No new owner judgment redirected that
 build. The owner's faithful hands-on probe runs — including reporting the
@@ -729,9 +630,9 @@ owner-decisions entry per this file's defined purpose.
 
 The two decisions below are **separate** from that §5.5.1 work — owner-
 driven, trajectory-changing scope reductions made in the same calm review
-that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
+that preceded the §5.3.5/§5.4 build. They qualify; Entries 23 and 27.
 
-## Entry 26 — Removing Google Maps from product scope by asking what it was for
+## Entry 23 — Removing Google Maps from product scope by asking what it was for
 
 - **Session:** 6 (close-out, pre-§5.3.5/§5.4 review)
 - **Moment:** Prepping the §5.3.5/§5.4 "Optimize for recipient" work.
@@ -771,14 +672,14 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   and the analysis are different contributions; a log that hands either
   one the whole win teaches the wrong lesson.
 
-## Entry 27 — Reframing the multi-compose deferral with an argument, not a status change
+## Entry 24 — Reframing the multi-compose deferral with an argument, not a status change
 
 - **Session:** 6 (close-out, same review)
 - **Moment:** Reviewing launch blockers before §5.3.5/§5.4. The
   multi-compose "full fix" was carried (Session 5) as **launch-blocking**.
 - **My input:** Reframed it as a **v2 deferral, not launch-blocking** —
   and required the deferral be *argued in writing* in the canonical
-  "v1 vs. v2 decisions" place (Entry 22 discipline: an argued deferral
+  "v1 vs. v2 decisions" place (Entry 20 discipline: an argued deferral
   holds, an unargued one gets relitigated), explicitly framing this as a
   refined decision with more context, **not** a correction of the Session
   5 call (which was right given what was known then).
@@ -798,8 +699,8 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   `33c79ac`). The Session 5 launch-blocking framing is preserved in the
   historical summaries as accurate-at-the-time.
 - **Artifact:** Commit `33c79ac`; `PRE_LAUNCH_CHECKLIST.md` "Multi-compose
-  targeting" + "v1 vs. v2 decisions"; this entry; Entry 18 (the original
-  silent-vs-visible-bug decision this refines) and Entry 22 (the pattern
+  targeting" + "v1 vs. v2 decisions"; this entry; the original
+  silent-vs-visible-bug triage decision this refines, and Entry 20 (the pattern
   this applies).
 - **Lesson (for coaching):** Downgrading a prior "must-fix" is legitimate
   — but only if you *argue* it, not just relabel it, and only if you say
@@ -807,7 +708,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   the earlier call. An unargued downgrade reads as drift and gets
   relitigated; an argued one, placed where deferrals are tracked, holds.
 
-## Entry 28 — The Phase-1 smoke that caught a default-reachable bug, and the re-scope it forced
+## Entry 25 — The Phase-1 smoke that caught a default-reachable bug, and the re-scope it forced
 
 - **Session:** 7
 - **Moment:** Phase 1 "gate zero" — the first hands-on run of the assembled
@@ -828,8 +729,8 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   the harness and flagged Test G as non-trivial — the prompt's triage rule
   would have caught it either way. But no automated test could surface
   this: the unit asserts the locked same-day snap, which is "correct" per
-  spec — the *spec* was miscalibrated for §5.5.1's reuse (the Entry-21 /
-  Entry-25 pattern). It took the owner *using* the product on its own
+  spec — the *spec* was miscalibrated for §5.5.1's reuse (the Entry-19 /
+  Entry-22 pattern). It took the owner *using* the product on its own
   default evening path and reporting the precise Gmail rejection. The
   specific re-scope shape and the snap semantics were owner calls; Claude
   surfaced options and a recommendation and did **not** pick.
@@ -849,7 +750,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   the fix's semantics are an owner product call — surface options, don't
   improvise them mid-build.
 
-## Entry 29 — Overriding the prompt's own OAuth-client instruction
+## Entry 26 — Overriding the prompt's own OAuth-client instruction
 
 - **Session:** 7
 - **Moment:** Phase 2 GCP setup. The session prompt's step 4 explicitly
@@ -862,7 +763,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   to do it *now* rather than defer client creation.
 - **What Claude Code would have done without it:** Honest in Claude's
   favour on the catch: Claude applied "surface, don't act" to the
-  *prompt's own scope* (Entry 20) — flagged the conflict and recommended
+  *prompt's own scope* (the Entry-15 discipline) — flagged the conflict and recommended
   the Web-application path with reasoning. But deviating from an explicit
   written instruction requires owner authority; without the owner Claude
   would not have unilaterally substituted a different client type, and the
@@ -881,12 +782,12 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   `extension/manifest.config.ts` (pinned `key`); `CLAUDE.md` "Google Cloud
   / OAuth"; `notes/session-7-summary.md`.
 - **Lesson (for coaching):** A prompt instruction is not exempt from
-  "what is this actually for?" (Entry 26). When a literal step conflicts
+  "what is this actually for?" (Entry 23). When a literal step conflicts
   with a deferred-but-known requirement, surface the conflict and get
   explicit authority to deviate — don't follow it into rework, and don't
   silently change it either.
 
-## Entry 30 — A rename question that hardened an implicit property into a guardrail
+## Entry 27 — A rename question that hardened an implicit property into a guardrail
 
 - **Session:** 7
 - **Moment:** Mid-Phase-2, the owner proactively asked how a future
@@ -897,7 +798,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   and then choosing "**log it, don't churn code now**" (a tracked
   guardrail + a surfaced launch-blocker) over an immediate refactor.
 - **What Claude Code would have done without it:** A clean
-  owner-judgment-via-question entry (cf. Entry 26's question, Entry 22's
+  owner-judgment-via-question entry (cf. Entry 23's question, Entry 20's
   pre-emption). The decoupling was *already largely true by construction*
   (extension ID from the manifest `key`, opaque Client ID, etc.) — Claude
   produced that analysis in response. Without the question it stays an
@@ -918,10 +819,10 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   written guardrail and surfaces the single place it leaks — long before
   launch pressure makes it costly.
 
-## Entry 31 — Locking "refresh tokens live on the backend" before Session 8 could decide it under pressure
+## Entry 28 — Locking "refresh tokens live on the backend" before Session 8 could decide it under pressure
 
 - **Session:** 7 close-out → pre-Session-8 (a documents-only architectural
-  lock; not new Session-7 build work — sits alongside Entries 28–30).
+  lock; not new Session-7 build work — sits alongside Entries 25–27).
 - **Moment:** Session 7 deferred the OAuth flow to Session 8 with "where
   do tokens live (PKCE-in-extension vs server-side exchange)?" left as an
   open question for Session 8's pre-implementation review. Before that
@@ -947,14 +848,14 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   — brought whole**, not produced by Claude in this round (do not inflate
   this: the prompt itself contained the analysis). Claude's load-bearing
   contributions were *upstream and downstream*, not the choice itself:
-  (a) the Session-7 Entry-29 analysis that `getAuthToken` cannot deliver
+  (a) the Session-7 Entry-26 analysis that `getAuthToken` cannot deliver
   refresh tokens → the Web-application client, which is the technical
   precondition Option B rests on; (b) this close-out review surfacing two
   implications the owner's directive did **not** enumerate — that a
   backend outage now also degrades the client-only Calendar/People
   features (broadening §6.7's trigger, captured in the §7.5 amendment),
   and that "add OAuth token management to the backend" had to be framed
-  so it does not read as reversing the Entry-26 single-purpose narrowing.
+  so it does not read as reversing the Entry-23 single-purpose narrowing.
   Owner forced and decided; Claude supplied the precondition and hardened
   the record. Neither did the other's part.
 - **Outcome:** PRD §7.5 (Option B, supersedes the split-storage wording),
@@ -965,7 +866,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   marker); PRE_LAUNCH Infrastructure + "Naming / rebrand readiness"
   (domain lead-time/trademark) updated; `backend/README.md` refined to
   match (a forward-looking doc the prompt did not name — flagged). The
-  Entry-19 lesson applied **successfully**: the decision was made in calm,
+  Entry-18 lesson applied **successfully**: the decision was made in calm,
   not under build pressure.
 - **Artifact:** This entry; PRD §7.5/§7.3.1/§7.3.3/§7.3.4 amendments;
   `CLAUDE.md` "Google Cloud / OAuth" + Architecture; `PRE_LAUNCH_CHECKLIST.md`
@@ -981,13 +882,13 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   precondition it rests on or surfacing its unstated implications — a log
   that blurs them teaches the wrong lesson.
 
-## Entry 32 — Splitting OutboxIQ into Free v1 and Premium v1 tiers before Session 8 could build the backend
+## Entry 29 — Splitting OutboxIQ into Free v1 and Premium v1 tiers before Session 8 could build the backend
 
 - **Session:** 7 close-out → pre-Session-8 (a documents-only scope/tier
-  decision; sits *after* Entry 31, same day, 2026-05-17 — not new
+  decision; sits *after* Entry 28, same day, 2026-05-17 — not new
   Session-7 build work).
 - **Moment:** Session 7 had locked the Option-B token architecture
-  (Entry 31) and set Session 8 to start the **backend skeleton + OAuth
+  (Entry 28) and set Session 8 to start the **backend skeleton + OAuth
   server-side exchange** — because, under the then-operative assumption,
   Unschedule-on-Reply (the backend's reason to exist) was in v1's only
   tier, so OAuth couldn't work end-to-end without the backend. Before
@@ -1012,7 +913,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
 - **What Claude Code would have done without it (Entry 17 honesty
   rule):** Session 8 would have opened and **begun backend
   implementation for Unschedule-on-Reply** — faithfully executing the
-  Entry-31 lock and the Session-7 roadmap, which is the correct default
+  Entry-28 lock and the Session-7 roadmap, which is the correct default
   for an agent respecting locked decisions. That path incurs the full
   cost-to-ship (CASA Tier 2 alone is 4–8 weeks) and delays any public
   launch by **months**, to ship a feature whose demand is unvalidated.
@@ -1025,7 +926,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   - **Claude Code's earlier work is foundation, not failure.** Sessions
     5–7 built real, valuable features (the §5.5/§5.5.1 enforcement, the
     verified Schedule Send recipe, the GCP/OAuth foundation). Every
-    architecture decision along the way — including Entry 31's Option B —
+    architecture decision along the way — including Entry 28's Option B —
     was **correct for its scope** and remains the binding design *for
     Premium v1*. The tier split reframes on top of that work; it does
     not invalidate it (Entry-4 discipline made explicit: locked against
@@ -1037,10 +938,10 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
     infrastructure* — the analysis that established the backend
     dependency is isolated to exactly one PRD feature. Claude supplied
     that mapping in response; the owner supplied the question and the
-    decision. Neither does the other's part (the recurring Entry-26
+    decision. Neither does the other's part (the recurring Entry-23
     pattern: a question can delete — or here, defer — a whole
     infrastructure tier).
-  - **A small Entry-25 moment (logged honestly against Claude):** earlier
+  - **A small Entry-22 moment (logged honestly against Claude):** earlier
     in this conversation Claude initially leaned toward switching from
     the Web-application OAuth client to a Chrome-extension client for the
     simpler Free v1 flow. The owner's pushback — *"do we lose
@@ -1056,7 +957,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
     sequential versions and **not "v2"** (which in this repo means a
     later generation / post-launch additive direction). The deferred
     design is **preserved verbatim and intact in PRD §13**, explicitly
-    *not* an Entry-26-style permanent removal. This framing is
+    *not* an Entry-23-style permanent removal. This framing is
     load-bearing for the product's eventual commercial structure (a
     Free→Premium upgrade, not a forced migration).
   - **GDPR is not tiered.** Compliance is a regulatory obligation, not a
@@ -1065,7 +966,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
     decision to "tier compliance" (PRD §6.1 amendment).
 - **Outcome:** Documents-only encoding (no feature code, no test, no GCP
   change). PRD: new **§13 Premium v1 Scope** (full §5.6 + §7.3 + the
-  Entry-31 §7.5 Option-B design moved verbatim, with §5.6/§7.3 left as
+  Entry-28 §7.5 Option-B design moved verbatim, with §5.6/§7.3 left as
   stubs); §7.5 rewritten as the Free v1 `access_type=online` model;
   §11 tier note (§11 = never build, in any tier ≠ §13 = build, Premium
   tier); dated tier pointers on §1/§2.2/§6.1/§6.5/§6.7/§7.1/§7.4 so the
@@ -1079,7 +980,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   probes" section captures the two Gmail-API probes with reasoning and
   fixed sequencing (feature-complete → probes → naming/positioning →
   hardening). **A flagged refinement of the directive, surfaced not
-  silently implemented (Entry-20/25 discipline):** "CASA Tier 2 → Premium,
+  silently implemented (Entry-22 discipline):** "CASA Tier 2 → Premium,
   no longer Free-v1-blocking" is only half-right — Free v1 keeps the
   restricted Gmail scopes, so *a* CASA assessment (plausibly Tier 1,
   tier-to-confirm) is **still Free-v1-launch-blocking**; encoded
@@ -1089,9 +990,9 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   tech, "Google Cloud / OAuth"); `PRE_LAUNCH_CHECKLIST.md` (Free v1
   audit + "Pre-launch probes"); `PREMIUM_LAUNCH_CHECKLIST.md` (new);
   `notes/session-7-summary.md` forward addendum; `README.md` /
-  `backend/README.md` tier touches. Entry 31 (the preserved Premium
-  design, *not* rewritten), Entry 26 (removal-vs-preservation contrast),
-  Entry 22 (the argued-deferral pattern this applies at scope level),
+  `backend/README.md` tier touches. Entry 28 (the preserved Premium
+  design, *not* rewritten), Entry 23 (removal-vs-preservation contrast),
+  Entry 20 (the argued-deferral pattern this applies at scope level),
   Entry 4 (locked-against-drift-not-new-facts), Entry 17 (the credit-
   split honesty this entry runs on).
 - **Lesson (for coaching):** Building against a spec is how you learn
@@ -1106,7 +1007,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   the implementation that surfaced the cost, the question that forced the
   examination, and the analysis that answered it are three different
   contributions; a log that merges them teaches the wrong lesson.
-- **Amendment (2026-05-27, Session-13 follow-up — Entry 52 executed; this
+- **Amendment (2026-05-27, Session-13 follow-up — Entry 49 executed; this
   Premium-removal commit).** The "two tiers of the same generation, Premium
   built *later in this repo*" framing above is **superseded** on the
   "where Premium lives" axis only. Premium v1 is now **out of scope of this
@@ -1117,18 +1018,18 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   listings (Pattern Y), independent versions. The *historical record* of the
   tier-split decision stays accurate exactly as written above (Entry-4
   discipline — this is an appended note, not a rewrite); only the
-  forward-looking distribution/location changes. See **Entry 52** (the scope
-  call), **Entry 53** (the Apache-2.0 license that makes the fork clean), and
-  **Entry 54** (the Pattern-Y / Path-2 distribution choice).
+  forward-looking distribution/location changes. See **Entry 49** (the scope
+  call), **Entry 50** (the Apache-2.0 license that makes the fork clean), and
+  **Entry 51** (the Pattern-Y / Path-2 distribution choice).
 
-## Entry 33 — Implicit-grant pivot, caught at the Entry-19 architecture review
+## Entry 30 — Implicit-grant pivot, caught at the Entry-18 architecture review
 
 - **Session:** 8 (Phase 2 pre-implementation review).
 - **Moment:** The Session-8 prompt (and the tier-split docs it rested on)
   specified Free v1 OAuth as an authorization-code exchange with a
-  (non-confidential) Client Secret shipped in the extension. The Entry-19
+  (non-confidential) Client Secret shipped in the extension. The Entry-18
   architecture review ran *before* any OAuth code.
-- **My input (owner):** Preserved the Entry-19 checkpoint (architecture
+- **My input (owner):** Preserved the Entry-18 checkpoint (architecture
   review before code) and authorised the pivot when it surfaced.
 - **What Claude Code would have done without it:** This one is honestly
   in Claude's favour on the catch. At the review Claude surfaced that the
@@ -1136,7 +1037,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   installed-client online pattern, is materially simpler (no token
   endpoint, fewer failure modes), and **ships zero confidential
   material** — strictly better than the spec'd code+secret for the Free
-  v1 (online, no-refresh) case. Without the Entry-19 gate, Claude would
+  v1 (online, no-refresh) case. Without the Entry-18 gate, Claude would
   have built the literal prompt (code+secret) — defensible spec-following
   that would have shipped a needless "secret" and more failure surface,
   then likely been reworked later. The load-bearing owner contribution
@@ -1148,12 +1049,12 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   exists). Commits `50ab02e`…`fd60134`.
 - **Artifact:** Commits `50ab02e`, `8153726`, `49977ed`, `7fae602`,
   `fd60134`; PRD §7.5/§6.5 Session-8 amendments; `notes/session-8-summary.md`.
-- **Lesson (for coaching):** Entry-19 architecture reviews keep earning
+- **Lesson (for coaching):** Entry-18 architecture reviews keep earning
   their keep. A strategic decision fixed at the prompt/spec level can
   still carry an implementation detail that benefits from technical
   scrutiny *before* code lands — the cheapest place to change it.
 
-## Entry 34 — Silent-renewal Option 1: graceful degradation, fix at the seam
+## Entry 31 — Silent-renewal Option 1: graceful degradation, fix at the seam
 
 - **Session:** 8 (Phase 2 hands-on smoke).
 - **Moment:** Hands-on testing showed `silent()` after token expiry
@@ -1185,7 +1086,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   seam where the missing piece arrives for free, and keep shipping —
   but say plainly it's a known limitation until the seam is reached.
 
-## Entry 35 — Calendar-timezone assumption-correction (the PRD was wrong, not imprecise)
+## Entry 32 — Calendar-timezone assumption-correction (the PRD was wrong, not imprecise)
 
 - **Session:** 8 (Phase 3 onboarding-wiring decision point).
 - **Moment:** About to wire the PRD-specified Calendar API timezone read
@@ -1220,7 +1121,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   agent that accepted the spec is the worst-placed to notice. Sharp
   owner review at the build moment catches it at the cheapest time.
 
-## Entry 36 — Scope minimisation (Option A), made load-bearing by the activation framing
+## Entry 33 — Scope minimisation (Option A), made load-bearing by the activation framing
 
 - **Session:** 8 (Phase 3 close-out review).
 - **Moment:** The Calendar removal prompted "what scopes does Free v1
@@ -1255,14 +1156,14 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   user-visible line before locking, because that is what turns
   "housekeeping" into a decision worth making now.
 
-## Entry 37 — Removing §5.9 and §5.7: PRD over-spec the native-architecture choice silently invalidated
+## Entry 34 — Removing §5.9 and §5.7: PRD over-spec the native-architecture choice silently invalidated
 
 - **Session:** 8 (close-out, reviewing the scope-trim discussion).
 - **Moment:** Reviewing scope/feature surface after the trim.
 - **My input (owner):** Identified that §5.9 (Undo toast) and §5.7
   (badge + cleanup-listening) are moot given OutboxIQ's
   native-Schedule-Send architecture (chosen at the Session-2 spike), and
-  **removed both from product scope** (Entry-26-shaped removal, all
+  **removed both from product scope** (Entry-23-shaped removal, all
   tiers) — §5.9 duplicates Gmail's own scheduled-send toast (violates
   §8.1); §5.7's badge differentiates against an effectively empty set
   post-install; §5.7's cleanup-listening is absorbed by Premium §13.
@@ -1274,7 +1175,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   framing — Claude was reasoning about *how to build* them, not whether
   they should exist). Without the owner's review both would have
   consumed implementation effort and kept distorting the scope/scope-
-  trim analysis. Bonus: their removal made the Entry-36 scope trim
+  trim analysis. Bonus: their removal made the Entry-33 scope trim
   *unconditionally* safe (no §5.9/§5.7 → no future Free v1 gmail.modify
   need → the DOM-vs-API probe Claude would otherwise have proposed is
   unnecessary).
@@ -1290,7 +1191,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   architecture actually needs?" review is how you find the features
   that quietly died.
 
-## Entry 38 — Adding `userinfo.email` after live testing falsified the docs-based scope assumption
+## Entry 35 — Adding `userinfo.email` after live testing falsified the docs-based scope assumption
 
 - **Session:** 9 (Phase-3 hands-on, the load-bearing check).
 - **Moment:** The committed `__oqAuth.testPeopleMe` probe, run by the
@@ -1301,11 +1202,11 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   the user's own email via `people/me`. Google's `people.get`
   documentation had listed `contacts.readonly` as sufficient — the
   docs were wrong. This left the `login_hint` multi-account fix
-  (Entry 34) non-functional without a decision.
+  (Entry 31) non-functional without a decision.
 - **My input (owner):** Chose to **add the minimal non-sensitive
   `userinfo.email` scope** rather than ship the permanent multi-account
   re-prompt — explicitly reaffirming that this refines, not reverses,
-  the Entry-36 minimisation principle (the principle forbids
+  the Entry-33 minimisation principle (the principle forbids
   *speculative* scope; this is *evidence-required* and intent-matching).
   Also drove the rigour that made the finding trustworthy: questioned
   why no consent screen reappeared, which surfaced the lingering-grant
@@ -1323,12 +1224,12 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   overriding Claude: Claude recommended A, the owner concurred and
   owned it. The load-bearing owner act was the *rigour* (revoke-first)
   that made the evidence trustworthy and the *authority* to amend the
-  Entry-36 lock.
+  Entry-33 lock.
 - **Outcome:** `OAUTH_SCOPES` → `contacts.readonly` + `userinfo.email`;
   PRD §6.6 Entry-6 amendment; `oauth-config.ts` / `user-identity.ts`
   headers updated; CLAUDE.md / PRE_LAUNCH / session-9 summary synced;
   145 tests still green (scope rippled dynamically, no code logic
-  change — the Entry-25 robust design absorbed it). Owner re-confirms
+  change — the Entry-22 robust design absorbed it). Owner re-confirms
   the 403→200 flip hands-on via `testPeopleMe` after adding the scope
   in GCP.
 - **Artifact:** `extension/src/lib/oauth-config.ts`;
@@ -1343,7 +1244,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   the test would otherwise have silently lied. And a scope-minimisation
   *principle* is not a scope-count *target* — adding one well-evidenced,
   intent-matching scope is consistent with minimisation, not a breach
-  of it; say so explicitly so a future session doesn't read Entry 36
+  of it; say so explicitly so a future session doesn't read Entry 33
   as forbidding it.
 - **Resolution addendum (2026-05-19, same session — Entry-4 discipline:
   the decision above stands; this records what implementing it actually
@@ -1355,15 +1256,15 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   OIDC-canonical source is the **ID token that already rides in the
   sign-in redirect**: switched to `response_type=token id_token` + a
   mandatory `nonce`, added `openid` to the scope set (so the id_token is
-  requested correctly — same Entry-38 intent, not a new decision), and
+  requested correctly — same Entry-35 intent, not a new decision), and
   read/validated the `email` claim (nonce/aud/iss checks; proportionate,
   non-signature — documented in `oauth.ts`). **No `people/me`, no extra
   network call, no new host permission.** The dead People-based
-  `user-identity.ts` (+ tests) was **removed** (Entry-22 / Session-8
+  `user-identity.ts` (+ tests) was **removed** (Entry-20 / Session-8
   precedent — not kept "for a maybe"). **Verified live, owner hands-on:**
   `whoami()` → `grantedEmail` resolved; `expireNow()`+`silent()` →
   multi-account silent renewal with **no account chooser**. The
-  Entry-34 limitation is closed. The owner's follow-up question — "do we
+  Entry-31 limitation is closed. The owner's follow-up question — "do we
   still need `contacts.readonly` at all, given its near-zero timezone
   hit rate?" — is **surfaced and tracked as the headline Session-10
   decision** (potential upside: an all-non-sensitive-scope app, which
@@ -1380,12 +1281,12 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   question ("then why do we still need the *other* scope?") is a gift —
   capture it, don't answer it tired.
 
-## Entry 39 — Free v1 drops ALL Google API: API-first PRD vs. DOM-first reality
+## Entry 36 — Free v1 drops ALL Google API: API-first PRD vs. DOM-first reality
 
-- **Session:** 9 (end, immediately after Entry 38's fix landed
-  verified-live; the owner chose to act on the question Entry 38 surfaced
+- **Session:** 9 (end, immediately after Entry 35's fix landed
+  verified-live; the owner chose to act on the question Entry 35 surfaced
   rather than defer it to Session 10).
-- **Moment:** Entry 38's "do we still need `contacts.readonly`?" was
+- **Moment:** Entry 35's "do we still need `contacts.readonly`?" was
   framed as a Session-10 decision. The owner closed it now: the empirical
   evidence was already conclusive (People timezone hit-rate ≈ nil — the
   §5.4.1 Maps-removal amendment's "single-digit %" was, in live testing,
@@ -1428,7 +1329,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
 - **Artifact:** `extension/src/premium-v1/` (+ `README.md`);
   `extension/src/background/timezone-cascade.ts`,
   `service-worker.ts`, `manifest.config.ts`; PRD §5.3.5/§5.3.7/§5.4.1/
-  §6.6/§7.5/§13 Entry-39 amendments; `CLAUDE.md`;
+  §6.6/§7.5/§13 Entry-36 amendments; `CLAUDE.md`;
   `notes/session-9-summary.md`.
 - **Lesson (for coaching):** The deepest miss isn't a wrong answer
   inside the frame — it's not questioning the frame. A spec that says
@@ -1442,24 +1343,24 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   doesn't — "not deleted, not wired" is a first-class outcome, not a
   hedge.
 
-## Entry 40 — "Default boundaries" rename + §5.5 Optimize-for-X exception (extending Entry 21)
+## Entry 37 — "Default boundaries" rename + §5.5 Optimize-for-X exception (extending Entry 19)
 
 - **Session:** 9 (Phase-G docs-only follow-on, immediately after the
-  Entry-39 OAuth pivot landed on `origin/main`). Owner chose to lock the
+  Entry-36 OAuth pivot landed on `origin/main`). Owner chose to lock the
   §5.3.5 UX *and* refine the §5.5 trigger *before* any §5.3.5 UI is
   built — same "context is fresh; nothing layered on the soon-to-be-
-  changed surface yet" timing rationale as Entry 39.
+  changed surface yet" timing rationale as Entry 36.
 - **Moment:** Walking the §5.3.5 UX through end-to-end revealed a
   trigger collision: a user who engages Optimize-for-X for a far-
   timezone recipient (the feature's *core use case*) is, by design,
   scheduling a time that crosses their own "absolute limits" — the
   9 AM-in-PST send from a New York user lands at 6 AM local. Under
-  the existing §5.5 trigger logic (Entries 19/21 — Schedule Send
+  the existing §5.5 trigger logic (Entries 18/19 — Schedule Send
   warns on absolute-limit violations), every successful Optimize-for-X
   send would fire the soft-warning modal at the *result* of an
   explicit four-step engagement (open modal → check Optimize → pick
   recipient → pick timing). The owner observed this is the **same
-  failure mode Entry 21 caught** for working-hours-on-Schedule-Send,
+  failure mode Entry 19 caught** for working-hours-on-Schedule-Send,
   one level deeper: it would train users to dismiss the warning, and
   the warning's value for the cases it actually exists to catch
   (Pick Custom at 3 AM by accident) would erode.
@@ -1472,11 +1373,11 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   by-design feature override exists is **misleading labelling**.
   Rename them **"Default boundaries"** product-wide. Locked. Imposed
   the docs-only constraint (no feature code in this commit), the
-  preserve-history rule (Entries 19/20/21/28 remain accurate-at-the-
+  preserve-history rule (Entries 18/19/25 remain accurate-at-the-
   time), and the timing rationale.
 - **What Claude Code would have done without it:** Genuinely joint,
   but the load-bearing moves were the owner's. Claude built every
-  prior session's §5.5 work faithful to the Entry-19/21 lock and
+  prior session's §5.5 work faithful to the Entry-18/19 lock and
   would have built §5.3.5's UI on top of that lock in Session 10 —
   meaning the trigger collision would have shipped, the warning
   would have fired on every optimized send, and the resulting
@@ -1492,20 +1393,20 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   exception (without it, the spec would describe a "hard limit"
   that an explicit feature was built to override — a contradiction
   in the docs); (c) the "preserve internal `absoluteEarliest`/
-  `absoluteLatest` schema identifiers per Entry 30, rename only
+  `absoluteLatest` schema identifiers per Entry 27, rename only
   user-facing copy" call to avoid a SCHEMA_VERSION bump for zero
   user-facing benefit. Both lines of work get credit honestly: the
   *core insight + locked direction* was owner; the *precision
   scoping + surfaced corollaries* was Claude.
 - **Outcome:** PRD §5.3.5 fully rewritten to the locked UX spec
-  (items a–n); PRD §5.5 carries the Entry-40 amendment (rename +
-  Case 1/Case 2 exception + preserved Entry 19/20/21/28 locks);
+  (items a–n); PRD §5.5 carries the Entry-37 amendment (rename +
+  Case 1/Case 2 exception + preserved Entry 18/19/25 locks);
   PRD §5.1.3 Step 3 / §5.3.6 / §5.3.7 / §5.8.2 updated for the
   rename + the exception's routing; CLAUDE.md "Locked product
-  decisions" gains the Entry-40 lock (refines, does not invalidate,
-  Entries 19/20/21/28); CLAUDE.md repo-status reflects Phase G;
+  decisions" gains the Entry-37 lock (refines, does not invalidate,
+  Entries 18/19/25); CLAUDE.md repo-status reflects Phase G;
   internal `absoluteEarliest`/`absoluteLatest` schema fields and
-  test/JSDoc references **kept as stable identifiers** (Entry-30
+  test/JSDoc references **kept as stable identifiers** (Entry-27
   pattern). One user-facing code-string alignment task surfaced
   for Session 10: `WorkingHoursStep.tsx` onboarding labels still
   read "Hard limits" / "Earliest I'd ever send an email" — tracked
@@ -1513,12 +1414,12 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   alignment first task (deferred from Phase G per the docs-only
   constraint, not forgotten).
 - **Artifact:** PRD §5.1.3 / §5.3.5 / §5.3.6 / §5.3.7 / §5.5 / §5.8.2
-  Entry-40 amendments; CLAUDE.md "Locked product decisions" two new
+  Entry-37 amendments; CLAUDE.md "Locked product decisions" two new
   bullets (rename+exception, §5.3.5 spec lock); CLAUDE.md repo
   status; `notes/session-9-summary.md`.
 - **Lesson (for coaching):** Locked decisions can be **refined when
   implementation reveals tension with the product's core use case**.
-  Entry 21 first taught this: a *valid rule* (warn on off-hours
+  Entry 19 first taught this: a *valid rule* (warn on off-hours
   send) can be *miscalibrated* when applied uniformly across triggers
   that have radically different user-intent profiles (Schedule Send
   with explicit time-pick vs. regular Send with implicit "now"). This
@@ -1537,7 +1438,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   next reader what the rule actually is, which matters when the next
   reader will design a feature that interacts with it.
 
-## Entry 41 — Product rename: OutboxIQ → Fashionably Late (Entry 30 paid off)
+## Entry 38 — Product rename: OutboxIQ → Fashionably Late (Entry 27 paid off)
 
 - **Session:** 9 (immediately after the Phase-G spec-lock + Default-
   boundaries rename landed on `origin/main` — same "context is fresh,
@@ -1561,31 +1462,31 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   entirely (no "schedule"/"outbox" framing that could be misread as
   calendar-adjacent). Also imposed the implementation discipline:
   historical artifacts preserved verbatim (Entry-4); forward-looking
-  artifacts and user-visible strings renamed; Entry-30 brand-
+  artifacts and user-visible strings renamed; Entry-27 brand-
   independent identifiers stay frozen; GCP-side rename deferred to
   Premium-v1 kickoff; GitHub repo rename owner's separate call later.
 - **What Claude Code would have done without it:** Owner-driven
   entirely. No frame in the implementation context invited
   questioning the name — by every metric Claude could see, "OutboxIQ"
   was a working name doing its job: brand-independent identifiers
-  decoupled cleanly (Entry 30), no PRD section needed it changed, no
+  decoupled cleanly (Entry 27), no PRD section needed it changed, no
   technical pressure existed. Claude's contribution was, at most,
-  Entry 30's earlier defensive work (also owner-prompted — "what
+  Entry 27's earlier defensive work (also owner-prompted — "what
   would a rename touch?") that made *this* rename mechanically clean;
   the *decision* and the *new name* were the owner's. Without the
   owner's positioning reflection, the product launches as "OutboxIQ"
   — a defensible name, not the strongest one given how the value
   proposition actually crystallized through nine sessions.
-- **Outcome (Entry-30 paid off — the rename was as cheap as that
+- **Outcome (Entry-27 paid off — the rename was as cheap as that
   framework predicted):** 41 forward-looking files bulk-renamed
   case-sensitively (`OutboxIQ` → `Fashionably Late`); preserved
   verbatim — `notes/session-*.md`, `notes/owner-decisions-log.md`
-  Entries 1–40, commit messages, LICENSE (no product-name reference),
-  every Entry-30 identifier (extension ID, storage keys, Client ID,
+  Entries 1–37, commit messages, LICENSE (no product-name reference),
+  every Entry-27 identifier (extension ID, storage keys, Client ID,
   redirect URI, GCP project ID, GitHub repo URL/path,
   `PRIVACY_POLICY_URL`). Verbatim locked-copy spec text (PRD §5.1.3
   onboarding + §5.2.1 `SCHEDULE_SEND_LABEL`) renamed via explicit
-  PRD amendments per the Entry-30 "amendment, not silent edit"
+  PRD amendments per the Entry-27 "amendment, not silent edit"
   discipline. npm package `outboxiq-extension` → `fashionably-late-extension`
   (lockfile resynced). Brand-and-naming-history note at top of
   `CLAUDE.md` so future readers (incl. future Claude Code sessions)
@@ -1599,12 +1500,12 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   grammar artifacts ("an Fashionably Late" → "a Fashionably Late",
   consonant-sound article flip).
 - **Artifact:** Single rename commit (this entry's landing commit);
-  PRD §5.1.3 / §5.2.1 Entry-41 amendments; `CLAUDE.md` top-of-file
+  PRD §5.1.3 / §5.2.1 Entry-38 amendments; `CLAUDE.md` top-of-file
   naming-history note + general body refresh; `PRE_LAUNCH_CHECKLIST.md`
-  "Naming / rebrand readiness" Entry-41 update with the GCP-rename
+  "Naming / rebrand readiness" Entry-38 update with the GCP-rename
   deferral; this entry.
 - **Lesson (for coaching):** **Foresight architecture pays off
-  exactly when its premise comes true.** Entry 30 was set up in
+  exactly when its premise comes true.** Entry 27 was set up in
   Session 7 *because the owner asked a forward question* ("what
   would a rename touch?"). That move looked, at the time, like
   modest hygiene — a documented guardrail, no code churn. Two
@@ -1623,16 +1524,16 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   the only collateral was filesystem-path / URL artifacts and the
   "a"/"an" article flip, both caught by a post-rename grep audit
   and reverted surgically. Worth recording: the rename's *biggest
-  win* wasn't the new name — it was confirming the Entry-30
+  win* wasn't the new name — it was confirming the Entry-27
   framework worked in practice exactly as designed.
 
-## Entry 42 — The install-time activation gap: owner overruled Claude's "acceptable MVP" deferral
+## Entry 39 — The install-time activation gap: owner overruled Claude's "acceptable MVP" deferral
 
 - **Session:** 10 (hands-on verification phase, *after* the §5.3.5 build
   landed). Note: a "Session 10 — no entries" line was written at the
   early close-out, when the session looked like pure spec-faithful
   implementation. The hands-on phase then produced two real entries
-  (this + Entry 43); the premature "no entries" line was removed. The
+  (this + Entry 40); the premature "no entries" line was removed. The
   lesson there is itself worth noting — *don't close the log before the
   session is actually over.*
 - **Moment:** The owner loaded the built extension with Gmail already
@@ -1675,16 +1576,16 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   reasonable from an implementer's view but fail a user's view —
   install-time activation is the canonical example. When the owner's
   product instinct contradicts a logged "acceptable" deferral, the
-  deferral deserves re-examination, not defence. (Pairs with Entry 27,
+  deferral deserves re-examination, not defence. (Pairs with Entry 24,
   where a deferral was *reframed*; here a deferral was *overturned*.)
 - **Artifact:** commits `a3a5035` (storage-listener), `d7e5dd6`
   (hot-inject + `scripting` permission); CLAUDE.md repo-status +
   manifest-permissions update; `notes/session-10-summary.md`.
 
-## Entry 43 — Hands-on rendering corrected the docs-only-locked §5.3.5 UX
+## Entry 40 — Hands-on rendering corrected the docs-only-locked §5.3.5 UX
 
 - **Session:** 10 (hands-on UI-iteration phase). The §5.3.5 UX was
-  locked **docs-only** in Entry 40 (Session 9), items (a)–(n), with the
+  locked **docs-only** in Entry 37 (Session 9), items (a)–(n), with the
   explicit framing "ready for Session 10 build."
 - **Moment:** Once the spec was rendered in the real modal and exercised
   against live Gmail, the owner drove a rapid screenshot-by-screenshot
@@ -1707,7 +1608,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   rather than ellipsis-truncate the label; truncate the `<select>`
   button but show the full value in the open menu).
 - **What Claude Code would have done without it:** Built faithfully to
-  the literal Entry-40 spec and stopped — shipping the (To)/(CC)
+  the literal Entry-37 spec and stopped — shipping the (To)/(CC)
   suffix, the awkward disclaimer, the un-gated panel, and the overflow
   bugs. All *functional*, all visibly rough. Claude's contribution in
   this phase was execution + a couple of honest tradeoff framings (the
@@ -1724,7 +1625,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   (`research/compose-recipients-probe.{js,md}`) found the real anchor
   (`div[role="option"][data-hovercard-id]`) and the module was
   re-anchored (`a052e6e`).
-- **Lesson (for coaching):** Docs-only UX locking (Entry 40's method)
+- **Lesson (for coaching):** Docs-only UX locking (Entry 37's method)
   reliably nails *structure and logic* — it caught the §5.5 trigger
   collision and locked the data model, which held up perfectly. But it
   **cannot** anticipate rendered presentation: spacing, type scale,
@@ -1741,7 +1642,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   `research/compose-recipients-probe.{js,md}`;
   `notes/session-10-summary.md`.
 
-## Entry 44 — Curated timezone dataset over raw IANA, then hands-on reshaped the picker
+## Entry 41 — Curated timezone dataset over raw IANA, then hands-on reshaped the picker
 
 - **Session:** 11 (the headline work; Phase 1 owner-gated, Phases 2–3 hands-on).
 - **Moment:** The picker had been rendering all ~600 raw IANA identifiers
@@ -1783,7 +1684,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   reframing what's displayed, not optimising how* — the raw IANA list wasn't a
   rendering bug, it was the wrong data model for a human to scan; the owner saw
   that the answer was a curated abstraction, not a better-sorted enumeration.
-  (2) *Extends Entry 43:* spec-faithful + green tests still isn't shippable UX.
+  (2) *Extends Entry 40:* spec-faithful + green tests still isn't shippable UX.
   A dataset can be machine-perfect (offsets verified) and still read as a
   jumble; a popup can pass every unit test and still spawn a second scrollbar.
   The felt experience of a list — scan-ability, grouping intuition, overflow
@@ -1801,13 +1702,13 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   by country, no country names), a *single country + its cities*, or a *bare
   country list* — never mixed. India/Sri Lanka, UK/Ireland/Portugal,
   Thailand/Vietnam/Indonesia, Japan/Korea split into one-country rows. Claude's
-  earlier "split the worst" (Entry-44 main) was a *granularity* fix; this was a
+  earlier "split the worst" (Entry-41 main) was a *granularity* fix; this was a
   *grammar* fix the owner derived from two clean rules — and it generalised
   better than any of the three options Claude had offered. Lesson: when the
   options you present all feel slightly off to the user, the right move is
   often a rule they can state, not an option they can pick — capture the rule.
 
-## Entry 45 — Pinned Timezones: a new feature, specified with migration discipline
+## Entry 42 — Pinned Timezones: a new feature, specified with migration discipline
 
 - **Session:** 11 (Phase 3).
 - **Moment:** The curated picker still meant scrolling to reach the handful of
@@ -1852,11 +1753,11 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   model (correct for §5.1.4 resume, wrong for the felt safety of Back); the
   owner named the principle ("until Continue, a step's settings shouldn't
   change") and Claude implemented it as a per-step on-entry snapshot that Back
-  restores, kept memory-only so §5.1.4 resume still works. Same Entry-43/44
+  restores, kept memory-only so §5.1.4 resume still works. Same Entry-40/41
   lesson once more: the data model can be technically sound and still feel
   unsafe in the hand — and only hands-on navigation surfaces it.
 
-## Entry 46 — The §5.8 Settings build, reshaped in hands-on (drag-to-reorder + four rendered-UX fixes)
+## Entry 43 — The §5.8 Settings build, reshaped in hands-on (drag-to-reorder + four rendered-UX fixes)
 
 - **Session:** 12 (Phase 1, owner hands-on after the gate)
 - **Moment:** Phase 1 shipped the Settings panel spec-faithfully — sidebar nav,
@@ -1883,14 +1784,14 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
 - **Outcome:** Commits `dd80ee1`, `00864e6`, `2ad10e5`, `520b250`; the shared
   `PinnedTimezonesEditor` (drag list + `reorderable` prop) and the
   `TimezonePicker` hover-scroll gate.
-- **Lesson (for coaching):** the Entry-43/44 lesson, a fourth time —
+- **Lesson (for coaching):** the Entry-40/41 lesson, a fourth time —
   spec-faithful + green tests is not shippable UX. The *felt* experience of a
   control (does the list move under my cursor? can I read the label? does
   reordering feel like a list or a poke-the-arrows chore?) is made in hands-on
   iteration. Drag-to-reorder over arrows is the clearest case: both satisfy
   "reorder pins," but only one matches what the user's hand expects.
 
-## Entry 47 — Live-sync into an open modal: owner took the risk I recommended against (knowingly)
+## Entry 44 — Live-sync into an open modal: owner took the risk I recommended against (knowingly)
 
 - **Session:** 12 (Phase 1 hands-on)
 - **Moment:** A pin reorder in Settings didn't reflect in an *already-open*
@@ -1920,38 +1821,38 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   recommendation; it's to make the tradeoff legible, hold the truly
   non-negotiable line (scope), and then implement the owner's call cleanly.
 
-## Entry 48 — Repo rename OutboxIQ → fashionably-late: the Entry-30 deferred call, made
+## Entry 45 — Repo rename OutboxIQ → fashionably-late: the Entry-27 deferred call, made
 
 - **Session:** 12 (mid-session, owner-directed)
 - **Moment:** Looking at the public GitHub repo, the owner updated the
   description and renamed the repo **OutboxIQ → `fashionably-late`** — the rename
-  Entries 30/41 had explicitly deferred as "the owner's separate call."
+  Entries 27/38 had explicitly deferred as "the owner's separate call."
 - **My input (owner):** Made the call to rename now; chose the slug
   (`fashionably-late`, matching the npm package); iterated the description copy
   (kept the original "lands at the right moment" payoff, dropped the Premium
   "auto-cancels on early replies" claim that Free v1 doesn't build).
 - **What Claude Code would have done without it:** This was the owner exercising
-  a decision Entry 30 reserved for them. Claude's contributions: flagging that
+  a decision Entry 27 reserved for them. Claude's contributions: flagging that
   the live description advertised an unbuilt/Premium feature (auto-cancel) on the
   public Free-v1 repo and proposing accurate copy; executing the cascade the
   rename triggers — `PRIVACY_POLICY_URL` (the only repo-name-*derived* value in
   code, via the GitHub Pages path), the git remote, and the CLAUDE.md /
   PRE_LAUNCH naming notes — while explicitly NOT touching the frozen identifiers
   (`OutboxIQState` type, `outboxiq*` storage keys, `outboxiq-dev` GCP project)
-  Entry 30 froze for breakage reasons; and holding the line that the rename does
+  Entry 27 froze for breakage reasons; and holding the line that the rename does
   NOT discharge the rename-proof-Privacy-URL launch-blocker (the Pages URL is
   still repo-named, just the new name).
 - **Outcome:** Repo renamed on GitHub (owner; GitHub auto-redirects the old
   URL); cascade commit `92d75e0`; `GITHUB_REPO_URL` constant added for the
   Phase-3 About link.
-- **Lesson (for coaching):** the Entry-30 brand-independent-identifier framework
+- **Lesson (for coaching):** the Entry-27 brand-independent-identifier framework
   paid off exactly as designed — the rename touched display copy + one derived
   URL + docs, and *nothing* load-bearing. The discipline that matters at rename
   time is knowing which "OutboxIQ" strings are the brand (rename) vs. frozen
   identities (leave) — a distinction Claude could apply mechanically *because*
-  Entry 30 had drawn it sessions earlier.
+  Entry 27 had drawn it sessions earlier.
 
-## Entry 49 — Recipient timezone inference from email Date-headers: explored, deferred (not Free-v1 work now)
+## Entry 46 — Recipient timezone inference from email Date-headers: explored, deferred (not Free-v1 work now)
 
 - **Session:** 13 (pre-session brainstorm, owner + PM thinking partner)
 - **Moment:** The owner raised an idea: a recipient's past emails carry their
@@ -1978,7 +1879,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
      currently threaded with) almost certainly needs the **Gmail API**
      (`messages` read scope) — the data isn't in the compose-time DOM. Adding a
      Gmail read scope **reintroduces the OAuth + CASA/consent-verification gate
-     that Entry 39's whole purpose was to remove.** That's a large cost.
+     that Entry 36's whole purpose was to remove.** That's a large cost.
   3. **The only clearly Free-v1-shaped slice is the thread-reply case** — when
      replying inside an existing thread, the recipient's past messages are
      already rendered in the DOM (no API, no scope). Multiple samples in a long
@@ -2008,14 +1909,14 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   eyes-open, and the reasoning is preserved so revisiting it later starts from
   evidence, not from scratch.
 
-## Entry 50 — Export hides non-Free-v1 feature flags (owner caught the confusing dead toggles)
+## Entry 47 — Export hides non-Free-v1 feature flags (owner caught the confusing dead toggles)
 
 - **Session:** 13 (Phase-1 hands-on)
 - **Moment:** Inspecting the freshly-wired Export JSON, the owner noticed the
   `featureToggles` block listed five flags but the Settings UI shows only two,
   and asked whether the other three should be in the file "because it might
   confuse users." The three: `unscheduleOnReply` (Premium v1), and the inert
-  `scheduleConfirmationToast` (moot — §5.9 Undo removed, Entry 37) and
+  `scheduleConfirmationToast` (moot — §5.9 Undo removed, Entry 34) and
   `alwaysScheduleOutsideHours` (§5.5.2 dropped).
 - **My input (owner):** After I laid out the trade-off — keep a faithful full
   dump (honours the Phase-1 "export the whole object, never hand-pick" decision,
@@ -2039,7 +1940,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   missing field. The deeper fix is to stop *storing* dead fields (a schema
   cleanup), which the deny-list defers honestly rather than papering over.
 
-## Entry 51 — The duplicate-instance bug: a wrong-assumption fix, then the right one, then "don't force-reload"
+## Entry 48 — The duplicate-instance bug: a wrong-assumption fix, then the right one, then "don't force-reload"
 
 - **Session:** 13 (mid-session, owner bug reports)
 - **Moment:** The owner hit "Send now anyway does nothing" (the §5.5.1 soft
@@ -2079,7 +1980,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   that a non-intrusive fix that *handles* the orphan beats one that *prevents*
   it by yanking people out of their inbox.
 
-## Entry 52 — Premium v1 kept out of this project; the Free-v1-only remaining-session roadmap
+## Entry 49 — Premium v1 kept out of this project; the Free-v1-only remaining-session roadmap
 
 - **Session:** 13 (close-out)
 - **Moment:** Asked what Session 14 looks like, the owner set the remaining
@@ -2087,14 +1988,14 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   comprehensive hands-on testing** — and directed that **anything Premium-v1
   scope be left out of this repo/project**.
 - **My input (owner):** Defined the roadmap and the scope boundary. This
-  sharpens Entry 32's tier-split (Premium = a *later* track) into "Premium is
+  sharpens Entry 29's tier-split (Premium = a *later* track) into "Premium is
   not part of *this* project at all."
 - **What Claude Code would have done without it:** Claude's own Session-14 sketch
   had already put Premium v1 out of immediate scope, so the roadmap aligned.
   Claude's load-bearing contribution was **refusing to silently act on the
   ambiguous "out of this repo"**: the repo holds the deliberately-*preserved*,
   inert, verified premium-v1 OAuth/People stack (`src/premium-v1/`), the untouched
-  `backend/`, `PREMIUM_LAUNCH_CHECKLIST.md`, and PRD §13 — all locked by Entry 39
+  `backend/`, `PREMIUM_LAUNCH_CHECKLIST.md`, and PRD §13 — all locked by Entry 36
   / CLAUDE.md as "preserved, not deleted." Physically deleting built+tested work
   is hard to reverse, so Claude recorded the directive, honoured it in the
   roadmap (no Premium work planned), and **flagged the physical removal as a
@@ -2110,7 +2011,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
 - **Amendment (2026-05-27 — the explicit go-ahead arrived; removal executed).**
   The owner confirmed the directive this entry flagged: physically remove the
   preserved Premium v1 code/docs. Done in **this commit** (`chore: remove
-  Premium v1 from public repo (Entry 52 executed)`): deleted
+  Premium v1 from public repo (Entry 49 executed)`): deleted
   `extension/src/premium-v1/` (the verified-but-inert OAuth/People stack +
   tests), `backend/`, `PREMIUM_LAUNCH_CHECKLIST.md`, and PRD §13; removed the
   Premium-only OAuth-smoke build tooling (`build:smoke` / `smoke:check` /
@@ -2119,11 +2020,11 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   pointers in the PRD, README, CLAUDE.md, and the kept source comments to
   "out of scope of this project." The strategic shape of "where Premium goes
   instead" (fork into a private repo; two-listing distribution) is recorded in
-  **Entry 54**, and the Apache-2.0 license that makes that fork clean in
-  **Entry 53**. The flag-don't-guess judgment recorded above was the right call:
+  **Entry 51**, and the Apache-2.0 license that makes that fork clean in
+  **Entry 50**. The flag-don't-guess judgment recorded above was the right call:
   the removal happened on an explicit owner instruction, not an inference.
 
-## Entry 53 — License model decided: Apache 2.0 + COMMERCIAL.md posture
+## Entry 50 — License model decided: Apache 2.0 + COMMERCIAL.md posture
 
 - **Session:** Between Sessions 13 and 14 (pre-launch documentation pass,
   2026-05-27).
@@ -2168,7 +2069,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   §4 (replaced the "source code is not open source / all rights reserved"
   paragraph with the accurate Apache 2.0 statement); `docs/legal/privacy.md`
   §2 + §11 (clarified Premium will be a separate Chrome Web Store extension,
-  not an in-product upgrade — companion to Entry 54); `CLAUDE.md` "Locked
+  not an in-product upgrade — companion to Entry 51); `CLAUDE.md` "Locked
   tech decisions" License line; `PRE_LAUNCH_CHECKLIST.md` license-review
   item marked RESOLVED with the original bullet retained struck-through;
   `extension/package.json` `license: "UNLICENSED"` → `"Apache-2.0"`.
@@ -2181,7 +2082,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   `1b0613e` (SPDX headers); the four new / replaced root files (`LICENSE`,
   `NOTICE`, `COMMERCIAL.md`, updated `README.md`); the updated legal docs;
   the new test file. The Apache 2.0 license is also the load-bearing enabler
-  for Entry 54's Pattern-Y / Path-2 distribution (a future Premium fork is
+  for Entry 51's Pattern-Y / Path-2 distribution (a future Premium fork is
   only "clean" because the public repo is Apache 2.0).
 - **Lesson (for coaching):** A "license-model deferred to pre-launch" item
   that's been deferred *for a year* has to be picked eventually, and the
@@ -2195,11 +2096,11 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   can lead to real commercial relationships, complementing an open license
   rather than fighting it.
 
-## Entry 54 — Premium v1 distribution: Pattern Y (two listings), Path 2 (separate builds from a private fork)
+## Entry 51 — Premium v1 distribution: Pattern Y (two listings), Path 2 (separate builds from a private fork)
 
 - **Session:** Between Sessions 13 and 14 (pre-launch documentation pass,
-  2026-05-27; companion to Entries 52 and 53).
-- **Moment:** Entry 52 had decided "Premium v1 is out of scope of this
+  2026-05-27; companion to Entries 49 and 53).
+- **Moment:** Entry 49 had decided "Premium v1 is out of scope of this
   project"; this 2026-05-27 batch was about *executing* that scope
   decision (commit `652656b` deleted the preserved Premium code, backend,
   checklist, and PRD §13). The deeper question that surfaced once the
@@ -2215,7 +2116,7 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
 - **My input (owner):** Chose **Pattern Y + Path 2**. The reasoning, in
   the owner's own framing:
   - Free's permission story stays minimal — no `identity`, no Google API,
-    no consent screen, ever, on the Free `.crx`. The Entry-39 invariant
+    no consent screen, ever, on the Free `.crx`. The Entry-36 invariant
     is enforced at *distribution* time, not just code time.
   - The Free `.crx` is byte-for-byte built from this public Apache-2.0
     repo (transparency: any reviewer can trace the installed extension
@@ -2226,14 +2127,14 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
     `host_permissions` set). A single-build Pattern X1 approach would
     either produce a Premium-flavored "Free" experience for free users
     (wrong) or saddle the public Free repo with permanent inert Premium
-    scaffolding — exactly the situation just exited in Entry 52.
+    scaffolding — exactly the situation just exited in Entry 49.
   - Free and Premium have **independent release cycles, independent
     semver, independent release notes.** Each evolves at its own cadence
     without forcing churn on the other.
 - **What Claude Code would have done without it (Entry 17 honesty rule):**
-  As with Entry 53, this is 100% owner strategic judgment; Claude has no
+  As with Entry 50, this is 100% owner strategic judgment; Claude has no
   counterfactual default to undo here. The actual risk Claude would have
-  left open given Entry 52 alone: ambiguity at fork time a year from
+  left open given Entry 49 alone: ambiguity at fork time a year from
   now — "do we fork this repo? Feature-flag in a private branch? One
   extension or two? One semver or two?" — three or four unresolved
   questions someone (Claude or another agent or the owner himself) would
@@ -2254,9 +2155,9 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
   subsection under `CLAUDE.md` "Locked product decisions" (commit
   `e8d6e40`), and as part of the §1 SUPERSEDING NOTE in the PRD, the
   `README.md` repository-layout note, the `PRE_LAUNCH_CHECKLIST.md` top
-  SUPERSEDING NOTE, and the amendments to Entries 32 and 52. Five
+  SUPERSEDING NOTE, and the amendments to Entries 29 and 52. Five
   consistent surfaces, one decision. The Apache 2.0 license adopted in
-  Entry 53 is the load-bearing enabler: without it the future Premium
+  Entry 50 is the load-bearing enabler: without it the future Premium
   fork couldn't be made cleanly. The previously-preserved verified
   Sessions 7–9 OAuth/People work is **recoverable from this repo's git
   history** if the Premium fork ever wants to use it — not deleted in any
@@ -2264,10 +2165,10 @@ that preceded the §5.3.5/§5.4 build. They qualify; Entries 26 and 27.
 - **Artifact:** This entry; the CLAUDE.md "Premium v1 strategic posture"
   subsection; the §1 SUPERSEDING NOTE in `Fashionably_Late_PRD.md`; the
   README repository-layout out-of-scope note; the PRE_LAUNCH SUPERSEDING
-  NOTE; the amendments to Entries 32 and 52. Cross-refs: Entry 52 (the
-  scope call this entry sharpens distribution-wise), Entry 53 (the
-  license that makes the fork clean), Entry 39 (the no-OAuth invariant
-  Pattern Y enforces at distribution time), Entry 32 (the original tier
+  NOTE; the amendments to Entries 29 and 52. Cross-refs: Entry 49 (the
+  scope call this entry sharpens distribution-wise), Entry 50 (the
+  license that makes the fork clean), Entry 36 (the no-OAuth invariant
+  Pattern Y enforces at distribution time), Entry 29 (the original tier
   split this supersedes the "where Premium lives" axis of).
 - **Lesson (for coaching):** When you decide *not* to do X in a project,
   you've answered "is X in scope here?" but **not** "how does X actually
@@ -2331,7 +2232,7 @@ this one.
 
 ---
 
-## Entry 55 — Conscious owner acceptance of three pre-launch security items as documented Free-v1 launch gaps
+## Entry 52 — Conscious owner acceptance of three pre-launch security items as documented Free-v1 launch gaps
 
 - **Session:** 16 (2026-05-28 — the pre-launch security gate, third of the
   four hardening sessions: a11y → Workspace → **security** → comprehensive
@@ -2365,7 +2266,7 @@ this one.
     native Send). Every viable hardening option (a defensive
     `MutationObserver` re-claim being the only mechanical candidate) lands
     on the gated hot path that Session 13's `claimPageOwnership` +
-    `isCurrentOwner` finally got right after the bug-3 saga (Entry 51) —
+    `isCurrentOwner` finally got right after the bug-3 saga (Entry 48) —
     risking a regression of that fix to defend against a low-severity attack
     that already requires another foothold (a malicious co-installed
     extension, or Gmail-side compromise) is the wrong trade. *Documented in
@@ -2376,7 +2277,7 @@ this one.
     definitively closed without a real Workspace tenant running DLP /
     content-compliance / send-event hooks, which neither the owner nor
     Claude has. The structural reasoning (no Google API call axis per
-    Entry 39 so the data-perimeter collision risk is zero; the §5.5.1
+    Entry 36 so the data-perimeter collision risk is zero; the §5.5.1
     gesture replay matches Gmail's own shape so a tenant Send hook sees the
     same event Gmail's UI produces) gives a low *structural* collision risk
     but is reasoning, not testing. The owner explicitly chose **not** to
@@ -2474,10 +2375,10 @@ this one.
   `npm audit`); the in-session XSS regression-guard commit `2e23394`
   (orthogonal — pinning React's escape-by-default for the one
   attacker-influenceable data path, not related to Flags 1/2/3). Cross-refs:
-  Entry 17 (the honesty rule this entry is bound by), Entry 39 (the
-  no-OAuth invariant that bounds Flag 2's data-perimeter axis), Entry 51
+  Entry 17 (the honesty rule this entry is bound by), Entry 36 (the
+  no-OAuth invariant that bounds Flag 2's data-perimeter axis), Entry 48
   (the Session-13 page-ownership fix Flag 1's mechanism comes from),
-  Entry 52 (the Premium-out-of-scope decision that keeps the audit surface
+  Entry 49 (the Premium-out-of-scope decision that keeps the audit surface
   this narrow). The CLAUDE.md gotcha for `npm audit` (already locked) and
   the gotcha for the page-ownership latch (Session 13, this entry adds a
   security-flag breadcrumb to it) are the daily-reference surfaces; this
@@ -2508,7 +2409,7 @@ this one.
 
 ---
 
-## Entry 56 — Default boundaries removed from the product; working hours consolidated as the single send-time window (SCHEMA_VERSION v3→v4)
+## Entry 53 — Default boundaries removed from the product; working hours consolidated as the single send-time window (SCHEMA_VERSION v3→v4)
 
 - **Session:** 17 (2026-05-28 — comprehensive hands-on testing, the final
   pre-submission gate; this refactor was scoped INTO Session 17 and sequenced
@@ -2541,14 +2442,14 @@ this one.
     write back v4).
   - **Confirmed the consequence I surfaced before editing:** removing Default
     boundaries also removes the §5.3 **Schedule Send** modal's *only* warning
-    trigger (it warned on absolute-only by the locked Entry-21 split, never on
+    trigger (it warned on absolute-only by the locked Entry-19 split, never on
     working hours). The owner confirmed Schedule Send should now show **no**
-    soft warning at all — coherent with Entry 21 (a deliberate off-hours
+    soft warning at all — coherent with Entry 19 (a deliberate off-hours
     *schedule* is the core use case; warning on it trains dismissal). The
     working-hours warning now lives ONLY on §5.5.1 regular Send.
 - **What Claude Code would have done without it (Entry 17 honesty rule):**
   Claude would NOT have initiated this on its own — the two-warning design
-  was the locked, shipped behavior (Entries 19/20/21/40), and Claude's
+  was the locked, shipped behavior (Entries 18/19/37), and Claude's
   standing instructions treat those as not-to-relitigate without explicit
   owner input. Left alone, Free v1 would have shipped with the redundant
   pair. The owner's product-coherence judgment is the entire origin of the
@@ -2590,8 +2491,8 @@ this one.
   Test count moved (removed the absolute-rule / `ensureFutureSnap` / boundary
   tests, added the v3→v4 migration test). Detail in `notes/session-17-summary.md`.
 - **Numbering note:** the session prompts guessed "Entry 56 (Workspace)" /
-  "Entry 58" for this; the actual sequential next number after Entry 55 is
-  **56**, assigned here because this decision was committed first. The
+  "Entry 58" for this; the actual sequential next number after Entry 52 is
+  **53**, assigned here because this decision was committed first. The
   Workspace admin-policy launch-gap acceptance (planned for the S17 close-out)
   follows as the next entry.
 - **Lesson (for coaching):** *Coherence is a feature.* The redundancy wasn't
@@ -2609,7 +2510,7 @@ this one.
 
 ---
 
-## Entry 57 — Workspace admin-policy interaction surface accepted as a documented Free-v1 launch gap
+## Entry 54 — Workspace admin-policy interaction surface accepted as a documented Free-v1 launch gap
 
 - **Session:** 17 (2026-05-28 — final pre-submission gate / close-out).
 - **Moment:** Two related items had been carried forward as "honest gaps /
@@ -2627,19 +2528,19 @@ this one.
   close these is not worth it for Free v1.** Both items are therefore
   **consciously accepted as documented Free-v1 launch gaps**, not left as
   ambiguous "pending." Reasoning, in my framing: Free v1 makes no Google API
-  call (Entry 39), so there is **no data-perimeter axis** for a tenant DLP /
+  call (Entry 36), so there is **no data-perimeter axis** for a tenant DLP /
   compliance policy to collide with; and on every ambiguous step Free v1
   **fails toward Gmail's own native path** (the multi-compose safety net, the
   §5.5.1 30-second watchdog, the `gmail-recipe.ts` step-failure fallbacks) —
   the same shape of graceful degradation an admin-disabled Schedule Send would
   need. So the *structural* risk is low even though it's untested. This is the
-  same accept-and-document posture as Entry 55, now applied to the one
+  same accept-and-document posture as Entry 52, now applied to the one
   remaining carried-forward unknown.
 - **What Claude Code would have done without it (Entry 17 honesty rule):**
   Claude had already recommended exactly this disposition in Sessions 15–16
   ("carry forward if a tenant appears, else accept as a launch gap"), so on
   *direction* this is owner-confirmed, not owner-corrected. The load-bearing
-  owner contribution is the same as Entry 55's lesson: **converting a
+  owner contribution is the same as Entry 52's lesson: **converting a
   conditional "accept if we can't test it" into an unconditional, on-the-record
   "the owner consciously accepted at the final gate, having confirmed the test
   environment is unavailable and not worth acquiring."** A future auditor asking
@@ -2657,11 +2558,11 @@ this one.
   `PRE_LAUNCH_CHECKLIST.md` ("Google Workspace compatibility" honest-gap note
   → accepted-gap; "Security audit" Flag 2 → ACCEPTED), in
   `notes/session-17-summary.md`, and in this entry. No code change, no spec
-  change, no SCHEMA_VERSION bump. Cross-refs: Entry 39 (no-OAuth invariant
-  that bounds the data-perimeter axis), Entry 55 (the sibling
+  change, no SCHEMA_VERSION bump. Cross-refs: Entry 36 (no-OAuth invariant
+  that bounds the data-perimeter axis), Entry 52 (the sibling
   conscious-acceptance entry from the S16 security gate), Session 15 / 16
   summaries (the original gap framing).
-- **Lesson (for coaching):** the mirror of Entry 55's lesson — *a
+- **Lesson (for coaching):** the mirror of Entry 52's lesson — *a
   carried-forward "known unknown" must be explicitly closed at the final gate,
   one way or the other.* Letting it stay "pending / accept if we can't test"
   through launch would read, to a later auditor, as something that slipped
@@ -2671,7 +2572,7 @@ this one.
 
 ---
 
-## Entry 58 — Brand color (Moonstone #5EB1BF) + the AA trade-off, the teal-plate icon, and the owner-authored promo composition
+## Entry 55 — Brand color (Moonstone #5EB1BF) + the AA trade-off, the teal-plate icon, and the owner-authored promo composition
 
 - **Session:** 18 (2026-05-29 — branding & media assets).
 - **Moment:** Session 18 replaced the placeholder brand ("OQ" icons, Google-blue
@@ -2718,10 +2619,10 @@ this one.
   site; Web Store promo assets. Recorded in `notes/session-18-summary.md`, in
   `PRE_LAUNCH_CHECKLIST.md` (brand items → DONE), and here. Cross-refs: **S14**
   (the AA commitment this honored — the *old* accent scraped 4.55:1, the new 700
-  is 4.84:1, an improvement), **Entry 41** (brand/naming history).
+  is 4.84:1, an improvement), **Entry 38** (brand/naming history).
 - **Numbering note:** the Session-18 prompt guessed "Entry 57" for this; the
-  actual sequential next number after Entry 57 (the S17 Workspace gap) is
-  **58** — the same off-by-one the prompts made for Entries 56/57.
+  actual sequential next number after Entry 54 (the S17 Workspace gap) is
+  **55** — the same off-by-one the prompts made for Entries 53/54.
 - **Lesson (for coaching):** a brand color chosen for how it *looks* can fail the
   accessibility bar it has to *clear* — resolve that at the design gate, not after
   shipping, and record the trade-off so "why isn't the button the brand color?"
@@ -2732,7 +2633,7 @@ this one.
 
 ---
 
-## Entry 59 — No-recipient Schedule guard: hard-disable (b) + reveal-on-failure (c), over force-native-error or soft-hint
+## Entry 56 — No-recipient Schedule guard: hard-disable (b) + reveal-on-failure (c), over force-native-error or soft-hint
 
 - **Session:** 19 (2026-05-29 — §5.3 no-recipient bug fix).
 - **Moment:** Owner reported a real-Gmail bug: with our §5.3 Schedule modal open
@@ -2795,13 +2696,13 @@ this one.
   +6 modal tests; a separate same-session DST-correctness audit added +8 logic
   tests (transition-day instants confirmed against real 2026 dates, no defect) —
   **362→376 total.** No `SCHEMA_VERSION` change, no new permissions, no manifest
-  change. Recorded in `notes/session-19-summary.md`, PRD §5.3 (Entry-59
+  change. Recorded in `notes/session-19-summary.md`, PRD §5.3 (Entry-56
   amendment), and CLAUDE.md. The DST tests are verification of existing behavior,
   not a trajectory change, so they get **no separate decision-log entry**.
 
 ---
 
-## Entry 60 — Landing page (fashionablylate.app): honest pre-launch CTA, public "Schedule send" naming, and owner-corrected screenshot framing
+## Entry 57 — Landing page (fashionablylate.app): honest pre-launch CTA, public "Schedule send" naming, and owner-corrected screenshot framing
 
 - **Session:** 20 (2026-05-29 — built the apex marketing landing page
   `docs/index.html`; site/web work, no extension-code/§11/schema impact).
@@ -2854,9 +2755,9 @@ this one.
 
 ---
 
-## Entry 61 — Privacy & data settings redesign: briefly cut as a staged 1.0.1, then REVERSED into a single 1.0.0 (review cancelled before it started)
+## Entry 58 — Privacy & data settings redesign: briefly cut as a staged 1.0.1, then REVERSED into a single 1.0.0 (review cancelled before it started)
 
-- **Session:** 20 (2026-05-29 — same session as Entry 60; this is a small
+- **Session:** 20 (2026-05-29 — same session as Entry 57; this is a small
   extension-code change, the first since 1.0.0 was packaged for the Web Store).
 - **Moment:** A deliberate *release-sequencing* call by the owner. The 1.0.0 zip
   is in Web Store review; rather than amend it (which would reset review) or hold
@@ -2883,9 +2784,9 @@ this one.
   cut-and-stage sequencing is the owner's contribution.
 - **Honest counterfactual cost:** ~zero, net-positive. A clearer privacy surface
   with no logic risk, queued behind the live submission.
-- **(Numbering note:** the task brief suggested "Entry 59" but the log already
-  holds Entries through 60 — Entry 59 is the S19 no-recipient guard — so this is
-  correctly **Entry 61**.)
+- **(Numbering note:** the task brief suggested "Entry 56" but the log already
+  holds Entries through 60 — Entry 56 is the S19 no-recipient guard — so this is
+  correctly **Entry 58**.)
 - **REVERSAL (same session, 2026-05-29 — Entry-4-style addendum, history kept
   above intact).** The owner reconsidered the staging and decided the review
   **had not actually started**, so cancelling and reuploading was free. Rather
@@ -2902,7 +2803,7 @@ this one.
 
 ---
 
-## Entry 62 — Firefox/AMO port greenlit: the PRD's "permanent" Firefox ban (§11.19 + §6.4) explicitly lifted after a hands-on spike showed the API gap is small and known
+## Entry 59 — Firefox/AMO port greenlit: the PRD's "permanent" Firefox ban (§11.19 + §6.4) explicitly lifted after a hands-on spike showed the API gap is small and known
 
 - **Session:** 21 (2026-06-04).
 - **Moment:** A deliberate owner reversal of a lock the PRD framed as permanent.
@@ -2954,7 +2855,7 @@ this one.
   the duplicate-tree instinct (understandable as "don't risk Chrome") the wrong
   tool. Chrome is protected instead by: single-source + a hard rule that no hot
   path (`gmail-recipe.ts`, §5.2 interceptor, §5.5.1 guard, page-ownership) gets a
-  Firefox conditional without a separate gating decision (Entry 23 discipline), +
+  Firefox conditional without a separate gating decision (Entry 21 discipline), +
   a Chrome regression gate (build/tests/package + Flows A–G if any shared source
   changes).
 - **§11 invariants untouched.** The port introduces no tracking, no analytics, no
